@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DAORepo.CustomerRepository;
-import com.example.demo.Model.Customer.Customer;
+//import com.example.demo.Model.Customer.*;
 
 @Service
 public class CustomerService {
@@ -19,7 +19,7 @@ public class CustomerService {
     public void findUser() throws SQLException{
     	
     }
-    public void createCustomer(Customer customer) throws SQLException{
-    	
-    }
+//    public void createCustomer(Customer customer) throws SQLException{
+//    	
+//    }
 }

@@ -26,7 +26,7 @@ public class CustomerRepository {
     public String findUser(String name) {
     	String query = "SELECT * FROM customer WHERE name = " + name;
     	SqlRowSet match=queryTemplate.queryForRowSet(query);
-		return match;
+		return "";
     }
     // Add additional methods for update, delete, etc.
 }

@@ -14,6 +14,13 @@ public class CustomerController {
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
+    
+    @GetMapping("/test")
+    public String test ()
+    {
+    	System.out.println("Working");
+    	return "Working";
+    }
 
     //@GetMapping("/register")
 
