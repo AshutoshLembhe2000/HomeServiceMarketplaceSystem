@@ -44,15 +44,4 @@ public class CustomerController {
     		return "User Created Successfully";
     	}
     }
-    
-    @GetMapping("/test")
-    public String test ()
-    {
-    	System.out.println("Working");
-    	return "Working";
-    }
-
-    //@GetMapping("/register")
-
-    //@PostMapping("/register")
 }

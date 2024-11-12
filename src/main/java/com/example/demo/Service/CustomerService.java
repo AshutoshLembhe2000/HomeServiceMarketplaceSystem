@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.DAORepo.CustomerRepository;
 //import com.example.demo.Model.Customer.*;
+import com.example.demo.Model.Customer.Customer;
 
 @Service
 public class CustomerService {
