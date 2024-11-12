@@ -1,5 +1,7 @@
 package com.example.demo.Model.User;
 import org.springframework.stereotype.Component;
+
+import com.example.demo.Model.Admin.Admin;
 import com.example.demo.Model.Customer.Customer;
 
 @Component
@@ -11,6 +13,9 @@ public class ConcreteUserFactory implements IUserFactory {
          case "Customer":
         	 System.out.println("Inside customer factory");
              return new Customer();
+         case "Admin":
+        	 System.out.println("Inside Admin factory");
+             return new Admin();
      }
 	return null;
  }
