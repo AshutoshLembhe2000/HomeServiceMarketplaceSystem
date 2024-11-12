@@ -7,7 +7,7 @@ public abstract class User {
 	protected String name;
     protected String email;
     protected String password;
-    protected int phoneno;
+    protected int phone_number;
     protected String city;
     
     //This method will get override since it will be used by the Admin, Customer and ServiceProvider
@@ -34,10 +34,10 @@ public abstract class User {
 		this.password = password;
 	}
 	public int getPhoneno() {
-		return phoneno;
+		return phone_number;
 	}
-	public void setPhoneno(int phoneno) {
-		this.phoneno = phoneno;
+	public void setPhoneno(int phone_number) {
+		this.phone_number = phone_number;
 	}
 	public String getCity() {
 		return city;

@@ -1,13 +1,14 @@
-package com.example.demo.Model.Customer;
+package com.example.demo.Model.Admin;
+
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Model.User.User;
 
 @Component
-public class Customer extends User {
-
+public class Admin extends User{
+	
 	@Override
     public String getUserType() {
-        return "Customer";
+        return "Admin";
     }
 }
