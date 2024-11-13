@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Service Provider Registration</title>
+</head>
+<body>
+<h1>Register as a Service Provider</h1>
+<form th:action="@{/ServiceProvider/ServiceProviderRegistrationSuccess}" th:object="${ServiceProvider}" method="post" >
+  <label for="name">Name:</label>
+  <input type="text" id="name" th:field="*{name}" required />
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" th:field="*{email}" required />
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" th:field="*{password}" required />
+
+  <label for="phoneno">Phone Number:</label>
+  <input type="text" id="phoneno" th:field="*{phoneno}" required />
+
+  <label for="city">City:</label>
+  <input type="text" id="city" th:field="*{city}" required />
+
+  <button type="submit">Register</button>
+</form>
+</body>
+</html>
