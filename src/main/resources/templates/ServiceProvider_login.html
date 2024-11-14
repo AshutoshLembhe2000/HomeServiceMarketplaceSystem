@@ -15,5 +15,10 @@
 
     <button type="submit">Login</button>
 </form>
+
+<div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+	
 </body>
 </html>
