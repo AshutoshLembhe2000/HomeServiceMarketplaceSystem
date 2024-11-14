@@ -1,12 +1,17 @@
 package com.example.demo.DAORepo;
 
 import com.example.demo.GlobalContext;
+<<<<<<< Updated upstream
 import com.example.demo.Model.SearchService.SearchService;
+=======
+import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
+>>>>>>> Stashed changes
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +19,8 @@ import java.util.Map;
 @Repository
 public class ServiceProvider_Repository {
 
+    @Autowired
+    private GlobalContext globalcontext;
     @Autowired
     private JdbcTemplate jdbctemplate;
 
@@ -56,6 +63,7 @@ public class ServiceProvider_Repository {
 
         String storedHashedPassword = (String) results.get(0).get("password");
         String serviceProviderId =   results.get(0).get("provider_id").toString();
+<<<<<<< Updated upstream
         
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -91,6 +99,44 @@ public class ServiceProvider_Repository {
         String query = "SELECT price, name, description FROM searchservice WHERE provider_id = ?";
         List<Map<String, Object>> results = jdbctemplate.queryForList(query, globalContext.getServiceProviderId());
         return results;
+=======
+
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean passwordMatches = passwordEncoder.matches(password, storedHashedPassword);
+        if (passwordMatches) {
+            // Set serviceProviderId in GlobalContext on successful login
+            globalcontext.setServiceProviderId(serviceProviderId);
+        }
+        return passwordMatches;
+    }
+
+    public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
+        String query = """
+            SELECT 
+                b.status AS booking_status,
+                b.booking_date,
+                c.name AS customer_name,
+                ss.skill
+            FROM 
+                booking b
+            JOIN 
+                customer c ON b.customer_id = c.customer_id
+            JOIN 
+                searchservice ss ON b.service_id = ss.service_id
+            WHERE
+                ss.provider_id = ?;
+            """;
+
+        return jdbctemplate.query(query, new Object[]{serviceProviderId}, (rs, rowNum) -> {
+            ServiceProviderBookingDTO serviceProviderBookingDTO = new ServiceProviderBookingDTO();
+            serviceProviderBookingDTO.setBookingStatus(rs.getString("booking_status"));
+            serviceProviderBookingDTO.setBookingDate(rs.getString("booking_date"));
+            serviceProviderBookingDTO.setCustomerName(rs.getString("customer_name"));
+            serviceProviderBookingDTO.setSkill(rs.getString("skill"));
+            return serviceProviderBookingDTO;
+        });
+>>>>>>> Stashed changes
     }
 
 }

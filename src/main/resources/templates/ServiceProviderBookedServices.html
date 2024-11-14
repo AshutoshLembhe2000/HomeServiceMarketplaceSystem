@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Service Provider Bookings</title>
+</head>
+<body>
+
+<h1>Service Provider Bookings</h1>
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>Customer Name</th>
+    <th>Skill</th>
+    <th>Booking Date</th>
+    <th>Booking Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Iterate over the bookings and display each one -->
+  <tr th:each="Booking : ${ServiceProviderBookingDTO}">
+    <td th:text="${Booking.customerName}"></td>
+    <td th:text="${Booking.skill}"></td>
+    <td th:text="${Booking.bookingDate}"></td>
+    <td th:text="${Booking.bookingStatus}"></td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
