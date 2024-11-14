@@ -2,10 +2,7 @@ package com.example.demo.DAORepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +23,8 @@ public class ServiceProvider_Repository {
     // Method to validate login
     public boolean validateLogin(String email, String password) {
         String sql = "SELECT COUNT(*) FROM ServiceProvider WHERE email = ? AND password = ?";
-        Integer count = jdbctemplate.queryForObject(sql, new Object[]{email, password}, Integer.class);
+        @SuppressWarnings("deprecation")
+		Integer count = jdbctemplate.queryForObject(sql, new Object[]{email, password}, Integer.class);
         return count != null && count > 0;  // Returns true if a matching record is found
     }
 
