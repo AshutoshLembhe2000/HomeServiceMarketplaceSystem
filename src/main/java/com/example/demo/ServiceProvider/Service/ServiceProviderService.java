@@ -1,6 +1,7 @@
 package com.example.demo.ServiceProvider.Service;
 
 import com.example.demo.DAORepo.ServiceProvider_Repository;
+import com.example.demo.Model.SearchService.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,11 @@ public class ServiceProviderService {
         return serviceprovider_repository.ValidateLogin(email, password);
     }
 
-
+    public int verifyServiceAddition(SearchService SearchService) {
+        return serviceprovider_repository.addServices(SearchService);
+    }
+    
+    public List<Map<String, Object>> getAllServiceProviderServices() {
+        return serviceprovider_repository.getServices();
+    }
 }

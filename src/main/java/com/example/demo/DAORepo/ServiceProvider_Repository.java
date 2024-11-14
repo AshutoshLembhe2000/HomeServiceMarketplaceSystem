@@ -1,5 +1,7 @@
 package com.example.demo.DAORepo;
 
+import com.example.demo.GlobalContext;
+import com.example.demo.Model.SearchService.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +17,8 @@ public class ServiceProvider_Repository {
     @Autowired
     private JdbcTemplate jdbctemplate;
 
+    @Autowired 
+    private GlobalContext globalContext;
     // getter for template
     public JdbcTemplate getJdbctemplate() {
         return jdbctemplate;
@@ -42,7 +46,7 @@ public class ServiceProvider_Repository {
 
     // Method to validate login
     public boolean ValidateLogin(String email, String password) {
-        String query = "SELECT password FROM ServiceProvider WHERE email = LOWER(?)";
+        String query = "SELECT password, provider_id FROM ServiceProvider WHERE email = LOWER(?)";
         List<Map<String, Object>> results = jdbctemplate.queryForList(query, new Object[] {email});
 
         if (results.isEmpty())
@@ -51,9 +55,44 @@ public class ServiceProvider_Repository {
         }
 
         String storedHashedPassword = (String) results.get(0).get("password");
+        String serviceProviderId =   results.get(0).get("provider_id").toString();
+        
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (globalContext.getServiceProviderId()== null && passwordEncoder.matches(password, storedHashedPassword)) {
+        	globalContext.setServiceProviderId(serviceProviderId);
+        }
         return passwordEncoder.matches(password, storedHashedPassword);
     }
+    
+    public int addServices(SearchService searchService) {
+        String query = """
+            INSERT INTO searchservice 
+            (service_id, provider_id, name, description, price, status, skill, category, rating) 
+            VALUES 
+            (1, 
+             (SELECT provider_id FROM serviceprovider WHERE name = ? LIMIT 1), 
+             ?, ?, ?, ?, ?, ?, ?)
+        """;
+        
+        return jdbctemplate.update(query, 
+            searchService.getName(), // This is used in the subquery for matching provider name
+            searchService.getName(), 
+            searchService.getDescription(), 
+            searchService.getPrice(), 
+            searchService.getStatus(), 
+            searchService.getSkill(), 
+            searchService.getCategory(), 
+            searchService.getRating());
+    }
+   
+    public List<Map<String, Object>> getServices() {
+    	
+        String query = "SELECT price, name, description FROM searchservice WHERE provider_id = ?";
+        List<Map<String, Object>> results = jdbctemplate.queryForList(query, globalContext.getServiceProviderId());
+        return results;
+    }
+
 }
 
 
