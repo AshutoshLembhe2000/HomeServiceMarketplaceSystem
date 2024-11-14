@@ -9,10 +9,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
+import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 
 
 @Repository
 public class ServiceProvider_Repository {
+
+    @Autowired
+    private GlobalContext globalcontext;
 
     @Autowired
     private JdbcTemplate jdbctemplate;
@@ -59,12 +63,40 @@ public class ServiceProvider_Repository {
         
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        if (globalContext.getServiceProviderId()== null && passwordEncoder.matches(password, storedHashedPassword)) {
-        	globalContext.setServiceProviderId(serviceProviderId);
+        boolean passwordMatches = passwordEncoder.matches(password, storedHashedPassword);
+        if (passwordMatches) {
+            // Set serviceProviderId in GlobalContext on successful login
+            globalcontext.setServiceProviderId(serviceProviderId);
         }
-        return passwordEncoder.matches(password, storedHashedPassword);
+        return passwordMatches;
     }
-    
+
+    public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
+        String query = """
+                SELECT 
+                    b.status AS booking_status,
+                    b.booking_date,
+                    c.name AS customer_name,
+                    ss.skill
+                FROM 
+                    booking b
+                JOIN 
+                    customer c ON b.customer_id = c.customer_id
+                JOIN 
+                    searchservice ss ON b.service_id = ss.service_id
+                WHERE
+                    ss.provider_id = ?;
+                """;
+
+        return jdbctemplate.query(query, new Object[]{serviceProviderId}, (rs, rowNum) -> {
+            ServiceProviderBookingDTO serviceProviderBookingDTO = new ServiceProviderBookingDTO();
+            serviceProviderBookingDTO.setBookingStatus(rs.getString("booking_status"));
+            serviceProviderBookingDTO.setBookingDate(rs.getString("booking_date"));
+            serviceProviderBookingDTO.setCustomerName(rs.getString("customer_name"));
+            serviceProviderBookingDTO.setSkill(rs.getString("skill"));
+            return serviceProviderBookingDTO;
+        });
+    }
     public int addServices(SearchService searchService) {
         String query = """
             INSERT INTO searchservice 

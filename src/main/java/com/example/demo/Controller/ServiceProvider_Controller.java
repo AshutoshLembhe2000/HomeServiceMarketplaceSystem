@@ -1,6 +1,6 @@
 package com.example.demo.Controller;
 
-
+import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.GlobalContext;
 import com.example.demo.Model.SearchService.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-
+import java.util.List;
 import java.sql.SQLException;
 
 @Controller
@@ -42,15 +42,20 @@ public class ServiceProvider_Controller {
     // Register a new ServiceProvider
     @PostMapping("/ServiceProviderRegistrationSuccess")
     @ResponseBody
-    public String createServiceProvider(ServiceProvider serviceProvider) throws SQLException {
-        int response= serviceproviderservice.VerifyifServiceProviderExist(serviceProvider);
-        if(response==0) {
-            return "User Already Exists";
+    public RedirectView createServiceProvider(ServiceProvider serviceProvider) throws SQLException {
+        int response = serviceproviderservice.VerifyifServiceProviderExist(serviceProvider);
+        if (response == 0) {
+            return new RedirectView("/ServiceProvider/ServiceProviderLoginForm?error=UserAlreadyExists");
+        } else {
+            return new RedirectView("/ServiceProvider/ServiceProviderLoginForm");
         }
-        else
-        {
-            return "User Created Successfully";
-        }
+    }
+
+    @GetMapping("/ViewBooking")
+    public String viewBooking(Model model) {
+        List<ServiceProviderBookingDTO> bookings = serviceproviderservice.getBookedServices();
+        model.addAttribute("ServiceProviderBookingDTO", bookings);
+        return "ServiceProviderBookedServices";
     }
 
     @GetMapping("/ServiceProviderLoginForm")
