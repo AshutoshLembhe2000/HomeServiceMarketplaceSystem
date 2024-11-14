@@ -1,27 +1,24 @@
 package com.example.demo.Controller;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import com.example.demo.Model.SearchServices.SearchService;
-import com.example.demo.SearchService.Service.SearchServiceService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.example.demo.GlobalContext;
+import com.example.demo.Model.SearchService.SearchService;
+import com.example.demo.ServiceProvider.Service.ServiceProviderService;
+
 
 @Controller
-@RequestMapping("/searchService")
+@RequestMapping("/Provider")
 public class SearchServiceController {
-	
-	@Autowired
-    private SearchServiceService searchServiceService;
 
-    // Method to fetch and display all services
-    @GetMapping("/all-services")
-    public String viewAllServices(Model model) throws SQLException{
-        List<SearchService> services = searchServiceService.getAllServices();
-        model.addAttribute("services", services);
-        return "all-services"; // Thymeleaf template name
-    }
+	//test
+   
 }
