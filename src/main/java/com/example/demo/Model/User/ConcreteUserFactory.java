@@ -1,9 +1,9 @@
 package com.example.demo.Model.User;
-import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.Model.Admin.Admin;
 import com.example.demo.Model.Customer.Customer;
+import com.example.demo.Model.ServiceProvider.ServiceProvider;
 
 @Component
 public class ConcreteUserFactory implements IUserFactory {
@@ -18,10 +18,9 @@ public class ConcreteUserFactory implements IUserFactory {
         	 System.out.println("Inside Admin factory");
              return new Admin();
          case "ServiceProvider":
-             System.out.println("Inside ServiceProvider factory");
-             return new ServiceProvider();
+        	 System.out.println("Inside Servide Provider factory");
+        	 return new ServiceProvider();
      }
-	 //test
 	return null;
  }
 }
