@@ -1,6 +1,5 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 
 import com.example.demo.GlobalContext;
 import com.example.demo.Model.SearchService.SearchService;
@@ -11,14 +10,10 @@ import com.example.demo.ServiceProvider.Service.ServiceProviderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-<<<<<<< Updated upstream
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-=======
->>>>>>> Stashed changes
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.sql.SQLException;
-import java.util.List;
 
 @Controller
 @RequestMapping("/ServiceProvider")
@@ -47,13 +42,14 @@ public class ServiceProvider_Controller {
     // Register a new ServiceProvider
     @PostMapping("/ServiceProviderRegistrationSuccess")
     @ResponseBody
-    public RedirectView createServiceProvider(ServiceProvider serviceProvider) throws SQLException {
+    public String createServiceProvider(ServiceProvider serviceProvider) throws SQLException {
         int response= serviceproviderservice.VerifyifServiceProviderExist(serviceProvider);
         if(response==0) {
-            return new RedirectView("/ServiceProvider/ServiceProviderLoginForm?error=UserAlreadyExists");
-        } else {
-            // Redirect to the login page on successful registration
-            return new RedirectView("/ServiceProvider/ServiceProviderLoginForm");
+            return "User Already Exists";
+        }
+        else
+        {
+            return "User Created Successfully";
         }
     }
 
@@ -81,7 +77,6 @@ public class ServiceProvider_Controller {
         }
     }
 
-<<<<<<< Updated upstream
     @GetMapping("/ServiceProviderWelcomeScreen")
     public String serviceProviderForm(Model model){
     	return "ServiceProviderWelcomeScreen";
@@ -110,12 +105,4 @@ public class ServiceProvider_Controller {
     	return "ListServices";
     }
 
-=======
-    @GetMapping("/ViewBooking")
-    public String viewBooking(Model model) {
-        List<ServiceProviderBookingDTO> bookings = serviceproviderservice.getBookedServices();
-        model.addAttribute("ServiceProviderBookingDTO", bookings);
-        return "ServiceProviderBookedServices";
-    }
->>>>>>> Stashed changes
 }
