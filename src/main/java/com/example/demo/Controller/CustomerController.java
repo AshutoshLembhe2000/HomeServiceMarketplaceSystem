@@ -9,8 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
-import com.example.demo.SearchService.Service.SearchServiceService;
-import com.example.demo.Customer.Service.CustomerService;
+import com.example.demo.Service.Customer.CustomerService;
+import com.example.demo.Service.SearchService.SearchServiceService;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.SearchServices.SearchService;
 

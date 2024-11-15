@@ -1,4 +1,4 @@
-package com.example.demo.SearchService.Service;
+package com.example.demo.Service.SearchService;
 
 import java.util.ArrayList;
 import java.util.List;
