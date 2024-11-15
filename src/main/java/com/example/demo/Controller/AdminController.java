@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.Admin.Service.*;
 import com.example.demo.Model.Admin.Admin;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
+import com.example.demo.Service.Admin.*;
 
 @Controller
 @RequestMapping("/Admin")

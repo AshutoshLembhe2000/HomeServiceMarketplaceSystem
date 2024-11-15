@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.Model.SearchServices.SearchService;
-import com.example.demo.SearchService.Service.SearchServiceService;
+import com.example.demo.Service.SearchService.SearchServiceService;
 
 @Controller
 @RequestMapping("/searchService")
