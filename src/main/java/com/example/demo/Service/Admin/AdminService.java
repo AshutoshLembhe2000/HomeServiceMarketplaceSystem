@@ -1,4 +1,4 @@
-package com.example.demo.Admin.Service;
+package com.example.demo.Service.Admin;
 
 import java.util.List;
 import java.util.Map;
