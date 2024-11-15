@@ -1,6 +1,7 @@
 package com.example.demo.DAORepo;
 
 import com.example.demo.GlobalContext;
+import com.example.demo.Model.Booking.BookingRowMapper;
 import com.example.demo.Model.SearchService.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class ServiceProvider_Repository {
     public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
         String query = """
                 SELECT 
+                    b.booking_id AS booking_id,
                     b.status AS booking_status,
                     b.booking_date,
                     c.name AS customer_name,
@@ -88,15 +90,9 @@ public class ServiceProvider_Repository {
                     ss.provider_id = ?;
                 """;
 
-        return jdbctemplate.query(query, new Object[]{serviceProviderId}, (rs, rowNum) -> {
-            ServiceProviderBookingDTO serviceProviderBookingDTO = new ServiceProviderBookingDTO();
-            serviceProviderBookingDTO.setBookingStatus(rs.getString("booking_status"));
-            serviceProviderBookingDTO.setBookingDate(rs.getString("booking_date"));
-            serviceProviderBookingDTO.setCustomerName(rs.getString("customer_name"));
-            serviceProviderBookingDTO.setSkill(rs.getString("skill"));
-            return serviceProviderBookingDTO;
-        });
+        return jdbctemplate.query(query, new Object[]{serviceProviderId}, new BookingRowMapper());
     }
+
     public int addServices(SearchService searchService) {
         String query = """
             INSERT INTO searchservice 
@@ -124,5 +120,11 @@ public class ServiceProvider_Repository {
         List<Map<String, Object>> results = jdbctemplate.queryForList(query, globalContext.getServiceProviderId());
         return results;
     }
+
+    public void updateBookingStatus(String bookingId, String status) {
+        String query = "UPDATE booking SET status = ? WHERE booking_id = ?";
+        jdbctemplate.update(query, status, bookingId);
+    }
+
 
 }

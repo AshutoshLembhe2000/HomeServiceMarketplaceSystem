@@ -56,4 +56,9 @@ public class ServiceProviderService {
 
         return serviceprovider_repository.findBookedServices(globalContext.getServiceProviderId());
     }
+
+    public void updateBookingStatus(String bookingId, String status) {
+        serviceprovider_repository.updateBookingStatus(bookingId, status);
+    }
+
 }
