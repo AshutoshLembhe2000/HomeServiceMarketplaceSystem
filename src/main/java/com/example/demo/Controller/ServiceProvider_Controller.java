@@ -6,7 +6,8 @@ import com.example.demo.Model.SearchService.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
-import com.example.demo.ServiceProvider.Service.ServiceProviderService;
+import com.example.demo.Service.ServiceProvider.ServiceProviderService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

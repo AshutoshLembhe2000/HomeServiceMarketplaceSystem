@@ -1,4 +1,4 @@
-package com.example.demo.ServiceProvider.Service;
+package com.example.demo.Service.ServiceProvider;
 
 import com.example.demo.DAORepo.ServiceProvider_Repository;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;

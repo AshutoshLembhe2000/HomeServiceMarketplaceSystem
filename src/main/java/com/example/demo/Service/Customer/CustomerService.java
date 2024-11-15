@@ -1,4 +1,4 @@
-package com.example.demo.Customer.Service;
+package com.example.demo.Service.Customer;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import com.example.demo.DAORepo.CustomerRepository;
 //import com.example.demo.Model.Customer.*;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.SearchServices.SearchService;
-import com.example.demo.SearchService.Service.SearchServiceService;
+import com.example.demo.Service.SearchService.SearchServiceService;
 
 @Service
 public class CustomerService {
