@@ -12,22 +12,40 @@
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th>Name</th>
-            <th>Description</th>
+
+            
+            <th>Service Provider Name</th>
+            <th>Category</th>
             <th>Price</th>
-            <th>Actions</th>
+			<th>Rating</th>
+            
+
         </tr>
         </thead>
         <tbody>
         <!-- Iterate over each service -->
         <tr th:each="SearchService : ${SearchService}">
-            <td th:text="${SearchService.name}"></td>
-            <td th:text="${SearchService.description}"></td>
+
+         
+            <td th:text="${SearchService.providerName}"></td>
+            <td th:text="${SearchService.category}"></td>
             <td th:text="${SearchService.price}"></td>
+			<td th:text="${SearchService.rating}"></td>
+            
             <td>
-                <form th:action="@{/serviceProvider/deleteService/{name}(name=${SearchService.name})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+				
+				<form th:action="@{/ServiceProvider/ModifyService/{providerName}/{serviceId}(providerName=${SearchService.providerName},  serviceId=${SearchService.serviceId})}" method="post">
+				       <button type="submit">Modify Service</button>
+				</form>
+				
+                <!-- Delete button with service ID dynamically passed -->
+				<form th:action="@{/ServiceProvider/DeleteService/{providerName}/{serviceId}(providerName=${SearchService.providerName}, serviceId=${SearchService.serviceId})}" method="post">
+				    <button type="submit">Delete Service</button>
+				</form>
+
+				
+				
+
             </td>
         </tr>
         </tbody>
