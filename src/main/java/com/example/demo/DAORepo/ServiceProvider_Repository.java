@@ -6,7 +6,7 @@ import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.SearchServices.SearchServiceRowMapper;
 
 import com.example.demo.Model.Booking.BookingRowMapper;
-import com.example.demo.Model.SearchService.SearchService;
+
 
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
