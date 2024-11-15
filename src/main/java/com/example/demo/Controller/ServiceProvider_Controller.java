@@ -135,4 +135,16 @@ public class ServiceProvider_Controller {
         return new RedirectView("/ServiceProvider/ListServices");
     }
 
+    @PostMapping("/UpdateBookingStatus")
+    public RedirectView updateBookingStatus(@RequestParam String bookingId, @RequestParam String status, RedirectAttributes redirectAttributes) {
+        try {
+            serviceproviderservice.updateBookingStatus(bookingId, status);
+            redirectAttributes.addFlashAttribute("message", "Booking status updated successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update booking status.");
+        }
+        return new RedirectView("/ServiceProvider/ViewBooking");
+    }
+
+
 }
