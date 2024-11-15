@@ -2,7 +2,7 @@ package com.example.demo.Service.ServiceProvider;
 
 import com.example.demo.DAORepo.ServiceProvider_Repository;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
-import com.example.demo.Model.SearchService.SearchService;
+import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class ServiceProviderService {
         return serviceprovider_repository.addServices(SearchService);
     }
     
-    public List<Map<String, Object>> getAllServiceProviderServices() {
+    public List<SearchService> getAllServiceProviderServices() {
         return serviceprovider_repository.getServices();
     }
 
@@ -55,5 +55,20 @@ public class ServiceProviderService {
     {
 
         return serviceprovider_repository.findBookedServices(globalContext.getServiceProviderId());
+    }
+    
+    public int deleteSelectedService(String providerName, String ServiceId)
+    {
+        return serviceprovider_repository.deleteSelectedServiceByID( providerName,  ServiceId, globalContext.getServiceProviderId());
+    }
+    
+    public int updateService(SearchService searchService)
+    {
+        return serviceprovider_repository.updateAndSave( searchService, globalContext.getServiceProviderId());
+    }
+    
+    public List<SearchService> getServiceForModify( String providerName, String ServiceId)
+    {
+        return serviceprovider_repository.getServiceForModify(providerName,  ServiceId, globalContext.getServiceProviderId());
     }
 }

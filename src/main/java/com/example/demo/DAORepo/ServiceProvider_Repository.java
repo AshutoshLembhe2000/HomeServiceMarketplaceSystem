@@ -1,7 +1,8 @@
 package com.example.demo.DAORepo;
 
 import com.example.demo.GlobalContext;
-import com.example.demo.Model.SearchService.SearchService;
+import com.example.demo.Model.SearchServices.SearchService;
+import com.example.demo.Model.SearchServices.SearchServiceRowMapper;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -100,7 +101,7 @@ public class ServiceProvider_Repository {
     public int addServices(SearchService searchService) {
         String query = """
             INSERT INTO searchservice 
-            (service_id, provider_id, name, description, price, status, skill, category, rating) 
+            (service_id, provider_id, name, price, status, skill, category, rating) 
             VALUES 
             (1, 
              (SELECT provider_id FROM serviceprovider WHERE name = ? LIMIT 1), 
@@ -108,9 +109,8 @@ public class ServiceProvider_Repository {
         """;
         
         return jdbctemplate.update(query, 
-            searchService.getName(), // This is used in the subquery for matching provider name
-            searchService.getName(), 
-            searchService.getDescription(), 
+            searchService.getProviderName(), // This is used in the subquery for matching provider name
+            searchService.getProviderName(),          
             searchService.getPrice(), 
             searchService.getStatus(), 
             searchService.getSkill(), 
@@ -118,11 +118,60 @@ public class ServiceProvider_Repository {
             searchService.getRating());
     }
    
-    public List<Map<String, Object>> getServices() {
-    	
-        String query = "SELECT price, name, description FROM searchservice WHERE provider_id = ?";
-        List<Map<String, Object>> results = jdbctemplate.queryForList(query, globalContext.getServiceProviderId());
-        return results;
+    @SuppressWarnings("deprecation")
+	public List<SearchService> getServices() {
+    	String query = "SELECT ss.service_id, ss.provider_id, ss.skill, ss.rating, ss.price, ss.status, " +
+                "sp.name AS provider_name, sp.city, ss.category " +
+                "FROM searchservice ss " +
+                "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
+                "WHERE ss.provider_id = ?";
+
+        //String query = "SELECT price, name, service_id description FROM searchservice WHERE provider_id = ?";
+        //List<Map<String, Object>> results = jdbctemplate.queryForList(query, globalContext.getServiceProviderId(), new SearchServiceRowMapper());
+        return jdbctemplate.query(query, new Object[]{globalContext.getServiceProviderId()}, new SearchServiceRowMapper());
+
     }
 
+    public int deleteSelectedServiceByID(String providerName, String ServiceId, String ServiceProviderId) {
+    	String query = "DELETE FROM `searchservice` WHERE (`service_id` = ?);\r\n"
+    			+ "";
+
+        //String query = "SELECT price, name, service_id description FROM searchservice WHERE provider_id = ?";
+    	int rowsAffected = jdbctemplate.update(query, ServiceId);
+        return rowsAffected;
+    }
+    
+    public int updateAndSave(SearchService searchService, String ServiceProviderId) {
+    	 String query = "UPDATE searchservice " +
+                 "SET price = ?,  category = ?, rating = ? " +
+                 "WHERE service_id = ? AND provider_id = ?";
+    	 String provider_id = globalContext.getServiceProviderId();
+    	return jdbctemplate.update(query, 		
+    			searchService.getPrice(),   			
+    			searchService.getCategory(), 
+    			searchService.getRating(),
+    			searchService.getServiceId(), 
+    			provider_id
+    			);
+    }
+    
+    public List<SearchService>  getServiceForModify( String providerName, String ServiceId, String ServiceProviderId) {
+    	
+    	String query = "SELECT ss.service_id, ss.provider_id, ss.skill, ss.rating, ss.price, ss.status, " +
+                "sp.name AS provider_name, sp.city, ss.category " +
+                "FROM searchservice ss " +
+                "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
+                "WHERE ss.provider_id = ? and ss.service_id = ?";
+
+    	 return jdbctemplate.query(query, new Object[]{ServiceProviderId,globalContext.getServiceProviderId() }, new SearchServiceRowMapper());
+
+    	
+    	/*String query = "SELECT ss.service_id, ss.provider_id, ss.skill, ss.rating, ss.price, ss.status, " +
+                "sp.name AS provider_name, sp.city, ss.category " +
+                "FROM searchservice ss " +
+                "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
+                "WHERE ss.provider_id = ? and ss.service_id = ?";
+*/
+    	
+    }
 }
