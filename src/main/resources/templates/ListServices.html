@@ -2,39 +2,40 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>List of Services</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Available Services</h2>
 
-<h2>Available Services</h2>
-
-<!-- Table to display services -->
-<table border="1">
-    <thead>
+    <!-- Table to display services -->
+    <table class="table table-striped">
+        <thead class="thead-dark">
         <tr>
-            
             <th>Name</th>
             <th>Description</th>
             <th>Price</th>
-            
+            <th>Actions</th>
         </tr>
-    </thead>
-    <tbody>
-        <!-- Iterate over each service in the services list dynamically -->
+        </thead>
+        <tbody>
+        <!-- Iterate over each service -->
         <tr th:each="SearchService : ${SearchService}">
-         
             <td th:text="${SearchService.name}"></td>
             <td th:text="${SearchService.description}"></td>
             <td th:text="${SearchService.price}"></td>
-            
             <td>
-                <!-- Delete button with service ID dynamically passed -->
-                <form th:action="@{/serviceProvider/deleteService/{name}(name=${SearchService.name})}" method="post">
-                    <button type="submit">Delete</button>
+                <form th:action="@{/serviceProvider/deleteService/{name}(name=${SearchService.name})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </td>
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>
