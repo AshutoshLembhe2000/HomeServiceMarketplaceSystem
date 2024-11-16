@@ -2,7 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.GlobalContext;
-import com.example.demo.Model.SearchService.SearchService;
+import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
@@ -110,5 +110,41 @@ public class ServiceProvider_Controller {
     	model.addAttribute("SearchService",serviceproviderservice.getAllServiceProviderServices());
     	return "ListServices";
     }
+    
+    @PostMapping("/DeleteService/{providerName}/{serviceId}")
+    public RedirectView deleteService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String ServiceId, Model model) {
+    	int res = serviceproviderservice.deleteSelectedService(providerName,ServiceId);
+       
+        	return new RedirectView("/ServiceProvider/ListServices");
+    }
+
+    // Endpoint to modify a service
+    @PostMapping("/ModifyService/{providerName}/{serviceId}")
+    public String modifyService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String serviceId , Model model) {
+        // Fetch the service details and populate the modification form
+        List<SearchService> res = serviceproviderservice.getServiceForModify(providerName,serviceId);
+        //SearchService service = res.get(0);
+        model.addAttribute("SearchService", res.get(0));
+        System.out.println(res.get(0));
+        return "ModifyService"; // Name of the Thymeleaf template for modification
+    }
+    
+    @PostMapping("/SaveModifiedService")
+    public RedirectView saveModifiedService(@ModelAttribute SearchService searchService, Model model) {
+    	serviceproviderservice.updateService(searchService);
+        return new RedirectView("/ServiceProvider/ListServices");
+    }
+
+    @PostMapping("/UpdateBookingStatus")
+    public RedirectView updateBookingStatus(@RequestParam String bookingId, @RequestParam String status, RedirectAttributes redirectAttributes) {
+        try {
+            serviceproviderservice.updateBookingStatus(bookingId, status);
+            redirectAttributes.addFlashAttribute("message", "Booking status updated successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update booking status.");
+        }
+        return new RedirectView("/ServiceProvider/ViewBooking");
+    }
+
 
 }
