@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public class GlobalContext {
 	private volatile String serviceProviderId;
 
-    public String getServiceProviderId() {
+    public  String getServiceProviderId() {
         return serviceProviderId;
     }
 
