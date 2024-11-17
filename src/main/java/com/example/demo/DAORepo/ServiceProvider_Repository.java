@@ -2,6 +2,8 @@ package com.example.demo.DAORepo;
 
 import com.example.demo.GlobalContext;
 
+import com.example.demo.Model.OTPService.OTPService;
+import com.example.demo.Model.OTPService.OTPServiceMapper;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.SearchServices.SearchServiceRowMapper;
 
@@ -77,35 +79,16 @@ public class ServiceProvider_Repository {
         return passwordMatches;
     }
 
-    public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
-        String query = """
-                SELECT 
-                    b.booking_id AS booking_id,
-                    b.status AS booking_status,
-                    b.booking_date,
-                    c.name AS customer_name,
-                    ss.skill
-                FROM 
-                    booking b
-                JOIN 
-                    customer c ON b.customer_id = c.customer_id
-                JOIN 
-                    searchservice ss ON b.service_id = ss.service_id
-                WHERE
-                    ss.provider_id = ?;
-                """;
 
-        return jdbctemplate.query(query, new Object[]{serviceProviderId}, new BookingRowMapper());
-    }
 
     public int addServices(SearchService searchService) {
         String query = """
             INSERT INTO searchservice 
-            (service_id, provider_id, name, price, status, skill, category, rating) 
+            ( provider_id, name, price, status, skill, category, rating) 
             VALUES 
-            (1, 
+            ( 
              (SELECT provider_id FROM serviceprovider WHERE name = ? LIMIT 1), 
-             ?, ?, ?, ?, ?, ?, ?)
+             ?, ?, ?, ?, ?, ?)
         """;
         
         return jdbctemplate.update(query, 
@@ -164,7 +147,7 @@ public class ServiceProvider_Repository {
                 "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
                 "WHERE ss.provider_id = ? and ss.service_id = ?";
 
-    	 return jdbctemplate.query(query, new Object[]{ServiceProviderId,globalContext.getServiceProviderId() }, new SearchServiceRowMapper());
+    	 return jdbctemplate.query(query, new Object[]{globalContext.getServiceProviderId() ,ServiceId}, new SearchServiceRowMapper());
 
     	
     	/*String query = "SELECT ss.service_id, ss.provider_id, ss.skill, ss.rating, ss.price, ss.status, " +
@@ -180,5 +163,74 @@ public class ServiceProvider_Repository {
         String query = "UPDATE booking SET status = ? WHERE booking_id = ?";
         jdbctemplate.update(query, status, bookingId);
     }
+
+    public OTPService findOTPByCode(String otpCode, String bookingId) {
+        String sql = "SELECT * FROM OTPService WHERE otp_code = ? AND booking_id = ?";
+        try {
+            return jdbctemplate.queryForObject(sql, new OTPServiceMapper(), otpCode, bookingId);
+        } catch (Exception e) {
+            return null; // OTP not found
+        }
+    }
+
+    public void updateBookingStatusTOComplete(String bookingId, String status) {
+        String sql = "UPDATE booking SET status = ? WHERE booking_id = ?";
+        jdbctemplate.update(sql, status, bookingId);
+    }
+
+    public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
+        String query = """
+                SELECT 
+                    b.booking_id AS booking_id,
+                    b.status AS booking_status,
+                    b.booking_date,
+                    c.name AS customer_name,
+                    ss.skill
+                FROM 
+                    booking b
+                JOIN 
+                    customer c ON b.customer_id = c.customer_id
+                JOIN 
+                    searchservice ss ON b.service_id = ss.service_id
+                WHERE
+                    ss.provider_id = ?
+                    AND b.status IN ('Accepted', 'Pending');
+                """;
+
+        return jdbctemplate.query(query, new Object[]{serviceProviderId}, new BookingRowMapper());
+    }
+
+    public List<ServiceProviderBookingDTO> getPastBookings(String providerId) {
+        String sql = "SELECT b.booking_id, c.name AS customer_name, ss.name AS skill, " +
+                "b.booking_date, b.status AS booking_status " +
+                "FROM Booking b " +
+                "JOIN Customer c ON b.customer_id = c.customer_id " +
+                "JOIN SearchService ss ON b.service_id = ss.service_id " +
+                "WHERE ss.provider_id = ? AND b.status IN ('Completed', 'Rejected') " +
+                "ORDER BY b.booking_date DESC";
+
+        return jdbctemplate.query(sql, new Object[]{providerId}, new BookingRowMapper());
+    }
+
+    // ServiceProvider Repository
+
+    // Method to get the service ID associated with a booking ID
+    public String getServiceIdByBookingId(String bookingId) {
+        String query = "SELECT service_id FROM booking WHERE booking_id = ?";
+        return jdbctemplate.queryForObject(query, new Object[]{bookingId}, String.class);
+    }
+
+    // Method to update the status of the service to 'Busy'
+    public void updateServiceStatusToBusy(String serviceId) {
+        String query = "UPDATE searchservice SET status = 'Busy' WHERE service_id = ?";
+        jdbctemplate.update(query, serviceId);
+    }
+    // // Method to update the status of the serviceProviderAvailability  to 'Busy'
+    public void updateServiceStatusToAvailable(String serviceId) {
+        String query = "UPDATE searchservice SET status = 'Available' WHERE service_id = ?";
+        jdbctemplate.update(query, serviceId);
+    }
+
+
 
 }

@@ -9,12 +9,25 @@
 <div class="container mt-5">
 	<h1 class="text-center mb-4">Welcome Service Provider</h1>
 
+	<div class="container mt-4">
+		<!-- Success Message -->
+		<div th:if="${message}" class="alert alert-success" role="alert">
+			<p th:text="${message}"></p>
+		</div>
+
+		<!-- Error Message -->
+		<div th:if="${error}" class="alert alert-danger" role="alert">
+			<p th:text="${error}"></p>
+		</div>
+	</div>
+
+
 	<!-- Center the form container -->
 	<div class="d-flex justify-content-center">
 		<div class="btn-group-vertical w-50">
 			<form>
 				<button type="submit" th:formaction="@{/ServiceProvider/addServiceForm}" method="get" class="btn btn-light btn-lg mb-3 w-100">Add Service</button>
-				<button type="submit" th:formaction="@{/ServiceProvider/newForm}" method="post" class="btn btn-light btn-lg mb-3 w-100">New Service</button>
+				<button type="submit" th:formaction="@{/ServiceProvider/PastBookings}" method="get"class="btn btn-light btn-lg mb-3 w-100">Past Bookings</button>
 				<button type="submit" th:formaction="@{/ServiceProvider/ListServices}" formmethod="get" class="btn btn-light btn-lg mb-3 w-100">My Service</button>
 				<button type="submit" th:formaction="@{/ServiceProvider/ViewBooking}" formmethod="get" class="btn btn-light btn-lg mb-3 w-100">View Bookings</button>
 			</form>
