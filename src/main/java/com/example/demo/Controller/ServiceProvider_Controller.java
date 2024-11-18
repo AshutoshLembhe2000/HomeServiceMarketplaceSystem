@@ -1,11 +1,14 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
+import com.example.demo.Model.Customer.Customer;
 import com.example.demo.GlobalContext;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
+import com.example.demo.Model.ServiceProvider.ServiceProviderStateManager;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
+import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.ServiceProvider.ServiceProviderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +25,22 @@ import java.sql.SQLException;
 public class ServiceProvider_Controller {
 
     private final ServiceProviderService serviceproviderservice;
+    
+    @Autowired
+    private final ServiceProviderStateManager serviceProviderStateManager;
+    
+    private final CustomerService customerService;
+    
     private final IUserFactory userFactory;
     
 	private  final GlobalContext globalcontext; 
 
-    public ServiceProvider_Controller(ServiceProviderService serviceproviderservice, IUserFactory userFactory,GlobalContext globalcontext) {
+    public ServiceProvider_Controller(ServiceProviderService serviceproviderservice, IUserFactory userFactory,GlobalContext globalcontext, ServiceProviderStateManager serviceProviderStateManager, CustomerService customerService) {
         this.serviceproviderservice = serviceproviderservice;
+		this.customerService = customerService;
         this.userFactory = userFactory;
         this.globalcontext=globalcontext;
+        this.serviceProviderStateManager=serviceProviderStateManager;
     }
 
     // Endpoint to register a new service provider
@@ -153,6 +164,12 @@ public class ServiceProvider_Controller {
     public RedirectView updateBookingStatus(@RequestParam String bookingId, @RequestParam String status, RedirectAttributes redirectAttributes) {
         try {
             serviceproviderservice.updateBookingStatus(bookingId, status);
+
+            
+            List<ServiceProvider> res = serviceproviderservice.getServiceProviderByServiceId();
+            List<Customer> customers = customerService.getAllCustomersByCity(res.get(0).getCity());
+
+            serviceProviderStateManager.changeState(res.get(0), status, customers);
 
             redirectAttributes.addFlashAttribute("message", "Booking status updated successfully!");
         } catch (Exception e) {
