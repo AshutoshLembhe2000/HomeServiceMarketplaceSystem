@@ -8,6 +8,7 @@ import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.ServiceProvider.ServiceProviderService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,12 +53,7 @@ public class ServiceProvider_Controller {
         }
     }
 
-    @GetMapping("/ViewBooking")
-    public String viewBooking(Model model) {
-        List<ServiceProviderBookingDTO> bookings = serviceproviderservice.getBookedServices();
-        model.addAttribute("ServiceProviderBookingDTO", bookings);
-        return "ServiceProviderBookedServices";
-    }
+
 
     @GetMapping("/ServiceProviderLoginForm")
     public String LoginForm(Model model)
@@ -99,8 +95,26 @@ public class ServiceProvider_Controller {
     @ResponseBody
     public String addServiceItem(SearchService SearchService) throws SQLException {
     	int s = serviceproviderservice.verifyServiceAddition(SearchService);
-    	System.out.print("Done dona Done");
-    	return "sswfds";
+        if (s == -1) {
+            return "You can only add one service per ServiceProvider."; // Or redirect to an appropriate page with a message
+        }
+    	return "Service Added Sucesfully!";
+    }
+
+    @GetMapping("/ViewBooking")
+    public String viewBooking(Model model) {
+        List<ServiceProviderBookingDTO> bookings = serviceproviderservice.getBookedServices();
+        model.addAttribute("ServiceProviderBookingDTO", bookings);
+        return "ServiceProviderBookedServices";
+    }
+
+
+
+    @GetMapping("/PastBookings")
+    public String viewPastBookings(Model model) {
+        List<ServiceProviderBookingDTO> pastBookings = serviceproviderservice.getPastBookings();
+        model.addAttribute("pastBookings", pastBookings);
+        return "PastBooking";
     }
 
     @GetMapping("/ListServices")
@@ -139,12 +153,44 @@ public class ServiceProvider_Controller {
     public RedirectView updateBookingStatus(@RequestParam String bookingId, @RequestParam String status, RedirectAttributes redirectAttributes) {
         try {
             serviceproviderservice.updateBookingStatus(bookingId, status);
+
             redirectAttributes.addFlashAttribute("message", "Booking status updated successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to update booking status.");
         }
         return new RedirectView("/ServiceProvider/ViewBooking");
     }
+
+
+
+    // Handles GET request to show OTP form
+    @GetMapping("/VerifyOTP")
+    public String showOTPForm(@RequestParam("bookingId") String bookingId, Model model) {
+        model.addAttribute("bookingId", bookingId);
+        return "VerifyOTP"; // Thymeleaf template for OTP form
+    }
+
+
+
+
+    @PostMapping("/VerifyOTP")
+    public RedirectView verifyOTP(@RequestParam("bookingId") String bookingId,
+                                  @RequestParam("otpCode") String otpCode,
+                                  RedirectAttributes redirectAttributes) {
+        boolean isVerified = serviceproviderservice.verifyOTP(otpCode, bookingId);
+        if (isVerified) {
+            serviceproviderservice.updateBookingStatusToCompleted(bookingId);
+
+            redirectAttributes.addFlashAttribute("message", "OTP Confirmed Successfully!");
+            return new RedirectView("/ServiceProvider/ServiceProviderWelcomeScreen");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Invalid OTP. Please try again.");
+            return new RedirectView("/ServiceProvider/VerifyOTP?bookingId=" + bookingId);
+        }
+    }
+
+
+
 
 
 }

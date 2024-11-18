@@ -9,8 +9,9 @@ public abstract class User {
     protected String password;
     protected int phone_number;
     protected String city;
-    
-    //This method will get override since it will be used by the Admin, Customer and ServiceProvider
+    protected int id;
+
+	//This method will get override since it will be used by the Admin, Customer and ServiceProvider
     public abstract String getUserType();
     
     //We need getter and setters to get the value of users
@@ -44,5 +45,13 @@ public abstract class User {
 	}
 	public void setCity(String city) {
 		this.city = city;
+	}
+    
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
