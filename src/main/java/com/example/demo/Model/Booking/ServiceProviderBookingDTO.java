@@ -2,8 +2,6 @@ package com.example.demo.Model.Booking;
 
 public class ServiceProviderBookingDTO {
 
-
-
     private String bookingId;
     private String bookingStatus;
     private String bookingDate;
