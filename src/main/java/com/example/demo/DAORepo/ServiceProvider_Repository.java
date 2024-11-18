@@ -212,19 +212,6 @@ public class ServiceProvider_Repository {
         return jdbctemplate.query(sql, new Object[]{providerId}, new BookingRowMapper());
     }
 
-    // ServiceProvider Repository
-
-    // Method to get the service ID associated with a booking ID
-    public String getServiceIdByBookingId(String bookingId) {
-        String query = "SELECT service_id FROM booking WHERE booking_id = ?";
-        return jdbctemplate.queryForObject(query, new Object[]{bookingId}, String.class);
-    }
-
-    // Method to update the status of the service to 'Busy'
-    public void updateServiceStatusToBusy(String serviceId) {
-        String query = "UPDATE searchservice SET status = 'Busy' WHERE service_id = ?";
-        jdbctemplate.update(query, serviceId);
-    }
     // // Method to update the status of the serviceProviderAvailability  to 'Busy'
     public void updateServiceStatusToAvailable(String serviceId) {
         String query = "UPDATE searchservice SET status = 'Available' WHERE service_id = ?";

@@ -154,10 +154,6 @@ public class ServiceProvider_Controller {
         try {
             serviceproviderservice.updateBookingStatus(bookingId, status);
 
-            if ("Accepted".equals(status)) {
-                serviceproviderservice.updateServiceStatusToBusy(bookingId);  // This is where the status of the service is changed to "Busy"
-            }
-
             redirectAttributes.addFlashAttribute("message", "Booking status updated successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to update booking status.");
@@ -183,7 +179,6 @@ public class ServiceProvider_Controller {
                                   RedirectAttributes redirectAttributes) {
         boolean isVerified = serviceproviderservice.verifyOTP(otpCode, bookingId);
         if (isVerified) {
-            serviceproviderservice.updateServiceStatusToAvailable(bookingId);
             serviceproviderservice.updateBookingStatusToCompleted(bookingId);
 
             redirectAttributes.addFlashAttribute("message", "OTP Confirmed Successfully!");
