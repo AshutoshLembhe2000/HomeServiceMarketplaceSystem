@@ -84,4 +84,9 @@ public class CustomerService {
     	}
 
     }
+
+	public List<Customer> getAllCustomersByCity(String city) {
+		// TODO Auto-generated method stub
+		return customerRepository.findCustomerByCity(city);
+	}
 }

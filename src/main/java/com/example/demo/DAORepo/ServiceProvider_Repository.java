@@ -6,6 +6,7 @@ import com.example.demo.Model.OTPService.OTPService;
 import com.example.demo.Model.OTPService.OTPServiceMapper;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.SearchServices.SearchServiceRowMapper;
+import com.example.demo.Model.ServiceProvider.ServiceProviderRowMapper;
 
 import com.example.demo.Model.Booking.BookingRowMapper;
 
@@ -31,6 +32,14 @@ public class ServiceProvider_Repository {
 
     @Autowired 
     private GlobalContext globalContext;
+    
+   
+    private final ServiceProviderRowMapper serviceProviderRowMapper; 
+    
+    public ServiceProvider_Repository(ServiceProviderRowMapper serviceProviderRowMapper) {
+    	this.serviceProviderRowMapper =serviceProviderRowMapper;
+    }
+    
     // getter for template
     public JdbcTemplate getJdbctemplate() {
         return jdbctemplate;
@@ -114,6 +123,23 @@ public class ServiceProvider_Repository {
         return jdbctemplate.query(query, new Object[]{globalContext.getServiceProviderId()}, new SearchServiceRowMapper());
 
     }
+    
+    @SuppressWarnings("deprecation")
+	public List<ServiceProvider> getServiceProviderServices() {
+    	String query = "SELECT  ss.provider_id, ss.status, " +
+                "sp.name AS provider_name, sp.city " +
+                "FROM searchservice ss " +
+                "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
+                "WHERE ss.provider_id = ?";
+
+       // return jdbctemplate.query(query, new Object[]{globalContext.getServiceProviderId()}, new ServiceProviderRowMapper());
+        return jdbctemplate.query(
+                query, 
+                new Object[]{globalContext.getServiceProviderId()}, 
+                serviceProviderRowMapper // Use injected row mapper
+            );
+
+    }
 
 
     public int deleteSelectedServiceByID(String providerName, String ServiceId, String ServiceProviderId) {
@@ -162,6 +188,11 @@ public class ServiceProvider_Repository {
     public void updateBookingStatus(String bookingId, String status) {
         String query = "UPDATE booking SET status = ? WHERE booking_id = ?";
         jdbctemplate.update(query, status, bookingId);
+    }
+    
+    public void updateServicsStatus(ServiceProvider provider) {
+        String query = "UPDATE searchservice SET status = ? WHERE provider_id = ?";
+        jdbctemplate.update(query, provider.getStateName(), provider.getProviderId());
     }
 
     public OTPService findOTPByCode(String otpCode, String bookingId) {
