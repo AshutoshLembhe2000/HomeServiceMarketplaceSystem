@@ -45,8 +45,8 @@ public class CustomerRepository {
 	
 	//Query to check for login with and password
 	public List<Map<String, Object>> loginCustomer(String name, String password){
-		String query = "SELECT name, password FROM customer WHERE LOWER(name) = LOWER(?) and LOWER(password) = LOWER(?)";
-    	return queryTemplate.queryForList(query,new Object[]{name,password});
+		String query = "SELECT name, password FROM customer WHERE LOWER(name) = LOWER(?)";
+		return queryTemplate.queryForList(query,new Object[]{name});
 	}
 	
 	//Query to display the name on the html page
@@ -54,5 +54,11 @@ public class CustomerRepository {
 		String query = "SELECT * FROM customer WHERE name = ?";
 		List<Customer> customers= queryTemplate.query(query, new CustomerRowMapper(),name);
 		return customers.isEmpty() ? null : customers.get(0);
+	}
+
+	public List<Customer> findCustomerByCity(String city) {
+		String query = "SELECT * FROM customer WHERE city = ?";
+		List<Customer> customers= queryTemplate.query(query, new CustomerRowMapper(),city);
+		return customers;
 	}
 }

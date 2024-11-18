@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DAORepo.CustomerRepository;
@@ -41,8 +42,22 @@ public class CustomerService {
     //Login logic check
     public int checkCustomerLogin(String name, String password) {
     	List<Map<String, Object>> response= customerRepository.loginCustomer(name,password);
-    	if(!response.isEmpty()) {
-    		return 1;    		
+    	if(!response.isEmpty())
+    	{
+    		Map<String,Object> firstResult=response.get(0);
+        	String getname=(String)firstResult.get("name");
+        	System.out.println(getname);
+        	String storedHashedPassword=(String)firstResult.get("password");
+        	System.out.println(storedHashedPassword);
+        	BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            boolean passwordMatches = passwordEncoder.matches(password, storedHashedPassword);
+	    	if(!getname.equals(name) || passwordMatches!=true) {
+	    		return 0;    		
+	    	}
+	    	else
+	    	{
+	    		return 1;
+	    	}
     	}
     	else
     	{
@@ -69,4 +84,9 @@ public class CustomerService {
     	}
 
     }
+
+	public List<Customer> getAllCustomersByCity(String city) {
+		// TODO Auto-generated method stub
+		return customerRepository.findCustomerByCity(city);
+	}
 }
