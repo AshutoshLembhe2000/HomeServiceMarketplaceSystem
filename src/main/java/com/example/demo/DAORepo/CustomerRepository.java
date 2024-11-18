@@ -45,8 +45,8 @@ public class CustomerRepository {
 	
 	//Query to check for login with and password
 	public List<Map<String, Object>> loginCustomer(String name, String password){
-		String query = "SELECT name, password FROM customer WHERE LOWER(name) = LOWER(?) and LOWER(password) = LOWER(?)";
-    	return queryTemplate.queryForList(query,new Object[]{name,password});
+		String query = "SELECT name, password FROM customer WHERE LOWER(name) = LOWER(?)";
+		return queryTemplate.queryForList(query,new Object[]{name});
 	}
 	
 	//Query to display the name on the html page

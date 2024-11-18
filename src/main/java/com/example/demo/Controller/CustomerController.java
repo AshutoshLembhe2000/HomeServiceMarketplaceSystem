@@ -53,7 +53,7 @@ public class CustomerController {
     public String createCustomer(Customer customer) throws SQLException {
     	int response= customerService.addCustomer(customer);
     	if(response==0) {
-    		return "User Already Exists";
+    		return "User Already Exists go to login";
     	}
     	else
     	{
@@ -73,21 +73,29 @@ public class CustomerController {
     public String authenticateCustomer(@RequestParam("username") String name, @RequestParam String password,Model model) {
     	int response=customerService.checkCustomerLogin(name,password);
     	if(response==1) {
-    		List<SearchService> services = searchServiceService.getAllServices();
-    		Customer customer=customerService.getCustomerByName(name);
-    		this.setGlobalCustomername(customer.getName());
-    		model.addAttribute("customer",customer);
-            model.addAttribute("services", services);
-            return "all-services";
+    		this.setGlobalCustomername(name);
+            return "CustomerWelcomeScreen";
     	}
     	else {
-    		model.addAttribute("error", "Customer does not exist, please create a new user and login again."); 
-    		return "CustomerLogin";
+    		//model.addAttribute("error", "Customer does not exist, please create a new user and login again."); 
+    		User customer = userFactory.createUser("Customer");
+        	model.addAttribute("customer",customer);
+        	return "CustomerRegistration";
     	}
     }
     /*---------------Customer Login---------------------------*/
     
     /*---------------Search Service---------------------------*/
+    @GetMapping("/allservices")
+    public String getAllservices(Model model) {
+    	List<SearchService> services = searchServiceService.getAllServices();
+		Customer customer=customerService.getCustomerByName(this.getGlobalCustomername());
+		this.setGlobalCustomername(customer.getName());
+		model.addAttribute("customer",customer);
+        model.addAttribute("services", services);
+        return "all-services";
+    }
+    
     @GetMapping("/filterservice")
     public String listFilteredServices(
             @RequestParam(required = false) String skill,
@@ -102,6 +110,7 @@ public class CustomerController {
         model.addAttribute("services", services);
         return "filter-services"; // Refers to the Thymeleaf view
     }
+    /*---------------Search Service---------------------------*/
     
     @GetMapping("/book")
     //@ResponseBody
@@ -111,6 +120,7 @@ public class CustomerController {
     	String response=customerService.checkServiceParameters(customerCity,serviceCity,serviceStatus);
     	if(response=="success")
     	{
+    		model.addAttribute("serviceId",serviceId);
     		model.addAttribute("customerCity", customerCity); 
     		model.addAttribute("serviceCity", serviceCity); 
     		model.addAttribute("serviceStatus", serviceStatus);
@@ -125,10 +135,5 @@ public class CustomerController {
     	{
     		return response;
     	}
-    }
-    
-    @PostMapping("/confirmBooking")
-    public String confirmBooking() {
-    	return null;
     }
 }
