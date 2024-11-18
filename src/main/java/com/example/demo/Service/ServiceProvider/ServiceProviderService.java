@@ -90,16 +90,6 @@ public class ServiceProviderService {
         return serviceprovider_repository.getPastBookings(globalContext.getServiceProviderId());
     }
 
-    public void updateServiceStatusToBusy(String bookingId) {
-
-        String serviceId = serviceprovider_repository.getServiceIdByBookingId(bookingId);
-        serviceprovider_repository.updateServiceStatusToBusy(serviceId);
-    }
-
-    public void updateServiceStatusToAvailable(String bookingId) {
-        String serviceId = serviceprovider_repository.getServiceIdByBookingId(bookingId);
-        serviceprovider_repository.updateServiceStatusToAvailable(serviceId);
-    }
 
     // Dhruv and Achyutam
     public int verifyServiceAddition(SearchService searchService) {
