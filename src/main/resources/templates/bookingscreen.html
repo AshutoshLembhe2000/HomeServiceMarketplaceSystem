@@ -10,6 +10,7 @@
         
         <p>Customer City: <span th:text="${customerCity}"></span></p>
         <p>Service City: <span th:text="${serviceCity}"></span></p>
+        <p>Service Id: <span th:text="${serviceId}"></span></p>
         <p>Service Status: <span th:text="${serviceStatus}"></span></p>
         <p>Service Price: <span th:text="${servicePrice}"></span></p>
         <p>Service Skill: <span th:text="${serviceSkill}"></span></p>
@@ -18,10 +19,10 @@
         <p>Service Category: <span th:text="${serviceCategory}"></span></p>
         <h2>Please select confirm booking if you want to book the service.</h2>
         
-        <!-- Confirm Booking Form -->
-        <form th:action="@{/ConfirmBooking}" method="post">
+        <form th:action="@{/payment/makePayment}" method="get">
             <input type="hidden" name="customerCity" th:value="${customerCity}" />
             <input type="hidden" name="serviceCity" th:value="${serviceCity}" />
+            <input type="hidden" name="serviceId" th:value="${serviceId}" />
             <input type="hidden" name="serviceStatus" th:value="${serviceStatus}" />
             <input type="hidden" name="servicePrice" th:value="${servicePrice}" />
             <input type="hidden" name="serviceSkill" th:value="${serviceSkill}" />
