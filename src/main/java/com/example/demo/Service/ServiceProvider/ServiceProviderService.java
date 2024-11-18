@@ -100,6 +100,10 @@ public class ServiceProviderService {
         return serviceprovider_repository.addServices(searchService);
     }
 
+	public  List<ServiceProvider> getServiceProviderByServiceId() {
+		return serviceprovider_repository.getServiceProviderServices();
+	}
+
 
 
 }

@@ -55,4 +55,10 @@ public class CustomerRepository {
 		List<Customer> customers= queryTemplate.query(query, new CustomerRowMapper(),name);
 		return customers.isEmpty() ? null : customers.get(0);
 	}
+
+	public List<Customer> findCustomerByCity(String city) {
+		String query = "SELECT * FROM customer WHERE city = ?";
+		List<Customer> customers= queryTemplate.query(query, new CustomerRowMapper(),city);
+		return customers;
+	}
 }
