@@ -9,7 +9,7 @@
     <h1 class="text-center mb-4">Verify OTP</h1>
 
     <!-- OTP Form to enter the OTP code -->
-    <form th:action="@{/ServiceProvider/VerifyOTP}" method="post">
+    <form th:action="@{/payment/VerifyOTP}" method="post">
         <div class="form-group">
             <label for="bookingId">Booking ID</label>
             <input type="text" id="bookingId" name="bookingId" class="form-control" th:value="${bookingId}" readonly />

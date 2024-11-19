@@ -17,6 +17,7 @@ public class PaymentRepository {
         String sql = "INSERT INTO payment (booking_id, amount, status, timestamp) VALUES (?, ?, ?, ?)";
         queryTemplate.update(sql, bookingId, amount, status, timestamp);
     }
+
     public List<Map<String, Object>> getBookingCountByCustomerId(int customerId) {
         String sql = "SELECT COUNT(*) FROM booking WHERE customer_id = ?";
         return queryTemplate.queryForList(sql, new Object[] {customerId});
@@ -33,4 +34,5 @@ public class PaymentRepository {
         String sql = "UPDATE booking SET payment_status = 'PAID' WHERE booking_id = ?";
         queryTemplate.update(sql, bookingId);
     }
+
 }

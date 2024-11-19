@@ -3,7 +3,7 @@ package com.example.demo.Model.OTPService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OTPService {
+public class OTPServiceModel {
 
     private String otp_id;
     private String booking_id;

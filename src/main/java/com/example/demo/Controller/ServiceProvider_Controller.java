@@ -2,7 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.Customer;
-import com.example.demo.GlobalContext;
+import com.example.demo.Service.ServiceProvider.GlobalContext;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import com.example.demo.Model.ServiceProvider.ServiceProviderStateManager;
@@ -180,31 +180,7 @@ public class ServiceProvider_Controller {
 
 
 
-    // Handles GET request to show OTP form
-    @GetMapping("/VerifyOTP")
-    public String showOTPForm(@RequestParam("bookingId") String bookingId, Model model) {
-        model.addAttribute("bookingId", bookingId);
-        return "VerifyOTP"; // Thymeleaf template for OTP form
-    }
 
-
-
-
-    @PostMapping("/VerifyOTP")
-    public RedirectView verifyOTP(@RequestParam("bookingId") String bookingId,
-                                  @RequestParam("otpCode") String otpCode,
-                                  RedirectAttributes redirectAttributes) {
-        boolean isVerified = serviceproviderservice.verifyOTP(otpCode, bookingId);
-        if (isVerified) {
-            serviceproviderservice.updateBookingStatusToCompleted(bookingId);
-
-            redirectAttributes.addFlashAttribute("message", "OTP Confirmed Successfully!");
-            return new RedirectView("/ServiceProvider/ServiceProviderWelcomeScreen");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "Invalid OTP. Please try again.");
-            return new RedirectView("/ServiceProvider/VerifyOTP?bookingId=" + bookingId);
-        }
-    }
 
 
 
