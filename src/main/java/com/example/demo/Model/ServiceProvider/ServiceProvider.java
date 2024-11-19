@@ -19,13 +19,13 @@ public class ServiceProvider extends User implements IServiceProviderSubject{
 	    private String status;
 	    
 	    private final List<Customer> observers = new ArrayList<>();
-	    
-	   
+
+
 	    public void setState(IServiceProviderStatusState state) {
 	    	 if (state == null) {
 	    	        throw new IllegalArgumentException("State cannot be null");
 	    	    }
-	    	
+
 	        this.state = state;
 	        this.currentState = state.getStateName(); // Update state name
 	        notifyObservers("Service Provider state changed to: " + state.getStateName());
@@ -67,16 +67,11 @@ public class ServiceProvider extends User implements IServiceProviderSubject{
 	        this.status = status;
 	    }
 
+
 		@Override
 		public void addObserver(Customer observer) {
 			// TODO Auto-generated method stub
 			observers.add(observer);
-		}
-
-		@Override
-		public void removeObserver(Customer observer) {
-			// TODO Auto-generated method stub
-			observers.remove(observer);
 		}
 
 		@Override

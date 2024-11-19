@@ -16,6 +16,4 @@ public class Customer extends User implements ICustomerObserver{
 		// TODO Auto-generated method stub
 		System.out.println("Sending notification to " + email + ": " + message);
 	}
-	
-	
 }
