@@ -1,9 +1,7 @@
 package com.example.demo.DAORepo;
 
-import com.example.demo.GlobalContext;
+import com.example.demo.Service.ServiceProvider.GlobalContext;
 
-import com.example.demo.Model.OTPService.OTPService;
-import com.example.demo.Model.OTPService.OTPServiceMapper;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.SearchServices.SearchServiceRowMapper;
 import com.example.demo.Model.ServiceProvider.ServiceProviderRowMapper;
@@ -195,19 +193,9 @@ public class ServiceProvider_Repository {
         jdbctemplate.update(query, provider.getStateName(), provider.getProviderId());
     }
 
-    public OTPService findOTPByCode(String otpCode, String bookingId) {
-        String sql = "SELECT * FROM OTPService WHERE otp_code = ? AND booking_id = ?";
-        try {
-            return jdbctemplate.queryForObject(sql, new OTPServiceMapper(), otpCode, bookingId);
-        } catch (Exception e) {
-            return null; // OTP not found
-        }
-    }
 
-    public void updateBookingStatusTOComplete(String bookingId, String status) {
-        String sql = "UPDATE booking SET status = ? WHERE booking_id = ?";
-        jdbctemplate.update(sql, status, bookingId);
-    }
+
+
 
     public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
         String query = """
@@ -243,11 +231,7 @@ public class ServiceProvider_Repository {
         return jdbctemplate.query(sql, new Object[]{providerId}, new BookingRowMapper());
     }
 
-    // // Method to update the status of the serviceProviderAvailability  to 'Busy'
-    public void updateServiceStatusToAvailable(String serviceId) {
-        String query = "UPDATE searchservice SET status = 'Available' WHERE service_id = ?";
-        jdbctemplate.update(query, serviceId);
-    }
+
 
 
 

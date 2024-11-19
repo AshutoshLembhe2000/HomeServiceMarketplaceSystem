@@ -48,7 +48,7 @@
 
         <!-- Verify OTP Button, only visible if booking is accepted -->
         <!-- Verify OTP Button (navigates to OTP form) -->
-        <form th:action="@{/ServiceProvider/VerifyOTP}" method="get" style="display:inline;">
+        <form th:action="@{/payment/VerifyOTP}" method="get" style="display:inline;">
           <input type="hidden" name="bookingId" th:value="${Booking.bookingId}" />
           <button type="submit" class="btn btn-primary" th:disabled="${Booking.bookingStatus != 'Accepted'}">
             Verify OTP

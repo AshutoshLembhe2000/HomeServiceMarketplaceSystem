@@ -1,15 +1,14 @@
 package com.example.demo.Model.OTPService;
 
-import com.example.demo.Model.OTPService.OTPService;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class OTPServiceMapper implements RowMapper<OTPService> {
+public class OTPServiceMapper implements RowMapper<OTPServiceModel> {
 
     @Override
-    public OTPService mapRow(ResultSet rs, int rowNum) throws SQLException {
-        OTPService otpService = new OTPService();
+    public OTPServiceModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+        OTPServiceModel otpService = new OTPServiceModel();
 
         otpService.setOtp_id(rs.getString("otp_id"));
         otpService.setBooking_id(rs.getString("booking_id"));
