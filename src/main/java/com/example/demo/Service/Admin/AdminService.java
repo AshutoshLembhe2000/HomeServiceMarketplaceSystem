@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.DAORepo.AdminRepository;
 import com.example.demo.Model.Admin.Admin;
+import com.example.demo.Model.Customer.Customer;
+import com.example.demo.Model.ServiceProvider.ServiceProvider;
 
 @Service
 public class AdminService {
@@ -27,5 +29,28 @@ public class AdminService {
     		return adminRepository.addadmin(admin);
     	}
 
+    }
+    
+    public List<Customer> getAllCustomers() {
+    	return adminRepository.getAllCustomers();
+    }
+    public List<ServiceProvider> getAllServiceProviders() {
+        return adminRepository.getAllServiceProviders();
+    }
+
+    // Logic to delete user
+    public int deleteUser(int id, String type) {
+    	if(type == "customer") {
+    		if (!adminRepository.customerExistsById(id)) {
+    			throw new RuntimeException("User not found");
+    		}
+    		return adminRepository.deleteCustomerById(id);    		
+    	}
+    	else {
+    		if (!adminRepository.serviceProviderExistsById(id)) {
+    			throw new RuntimeException("User not found");
+    		}
+    		return adminRepository.deleteServiceProviderById(id);
+    	}
     }
 }
