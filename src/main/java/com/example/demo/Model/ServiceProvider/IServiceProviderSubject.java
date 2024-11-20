@@ -5,6 +5,5 @@ import com.example.demo.Model.Customer.ICustomerObserver;
 
 public interface IServiceProviderSubject {
     void addObserver(Customer observer);
-    void removeObserver(Customer observer);
     void notifyObservers(String message);
 }

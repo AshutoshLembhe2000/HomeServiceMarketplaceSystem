@@ -2,12 +2,11 @@ package com.example.demo.Service.ServiceProvider;
 
 import com.example.demo.DAORepo.ServiceProvider_Repository;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
-import com.example.demo.Model.OTPService.OTPService;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.GlobalContext;
+
 import java.util.List;
 import java.util.Map;
 
@@ -69,16 +68,6 @@ public class ServiceProviderService {
         serviceprovider_repository.updateBookingStatus(bookingId, status);
     }
 
-
-    public boolean verifyOTP(String otpCode, String bookingId) {
-        OTPService otpService = serviceprovider_repository.findOTPByCode(otpCode, bookingId);
-        return otpService != null;
-    }
-
-    public void updateBookingStatusToCompleted(String bookingId) {
-        // Use the repository to update the booking status
-        serviceprovider_repository.updateBookingStatusTOComplete(bookingId, "Completed");
-    }
 
     // Booked_Service
     public List<ServiceProviderBookingDTO> getBookedServices()
