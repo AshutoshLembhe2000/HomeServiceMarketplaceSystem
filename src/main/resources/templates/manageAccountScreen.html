@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Users</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .section-header {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Users</h1>
+    
+    <!-- Customer Section -->
+    <div>
+        <h2 class="section-header">Customers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="customer : ${customers}">
+                    <td th:text="${customer.id}"></td>
+                    <td th:text="${customer.name}"></td>
+                    <td th:text="${customer.email}"></td>
+                    <td th:text="${customer.city}"></td>
+                    <td>
+                        <button th:onclick="'deleteCustomer(' + ${customer.id} + ')'">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Service Provider Section -->
+    <div>
+        <h2 class="section-header">Service Providers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Service</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="provider : ${serviceProviders}">
+                    <td th:text="${provider.id}"></td>
+                    <td th:text="${provider.name}"></td>
+                    <td th:text="${provider.email}"></td>
+					<td th:text="${provider.city}"></td>
+                    <td>
+                        <button th:onclick="'deleteProvider(' + ${provider.id} + ')'">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to delete a customer
+        function deleteCustomer(customerId) {
+            fetch(`/Admin/manage-accounts/customer/${customerId}`, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Customer deleted successfully');
+                    location.reload();
+                } else {
+                    alert('Error deleting customer');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again later.');
+            });
+        }
+
+        // Function to delete a service provider
+        function deleteProvider(providerId) {
+            fetch(`/Admin/manage-accounts/service-provider/${providerId}`, {
+                method: 'GET'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Service provider deleted successfully');
+                    location.reload();
+                } else {
+                    alert('Error deleting service provider');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again later.');
+            });
+        }
+    </script>
+</body>
+</html>
