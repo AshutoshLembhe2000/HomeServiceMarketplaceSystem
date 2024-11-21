@@ -30,6 +30,7 @@ public class ServiceProvider extends User implements IServiceProviderSubject{
 	        this.currentState = state.getStateName(); // Update state name
 	        notifyObservers("Service Provider state changed to: " + state.getStateName());
 	    }
+	    
 
 	    public void handleState(ServiceProvider_Repository serviceProviderRepository) {
 	        state.handleStatusState(this, serviceProviderRepository);
