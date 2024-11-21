@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.Model.Admin.Admin;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.Customer.CustomerRowMapper;
-import com.example.demo.Model.ServiceProvider.ServiceProviderRowMapper;
+import com.example.demo.Model.Admin.ServiceProviderRowMapperForAdmin;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 
 @Repository
@@ -64,7 +64,7 @@ private JdbcTemplate queryTemplate;
 	//Query to get all the service provider's accounts
 	public List<ServiceProvider> getAllServiceProviders() {
 		String query = "SELECT * FROM serviceprovider";
-		List<ServiceProvider> serviceProvider = queryTemplate.query(query, new ServiceProviderRowMapper());
+		List<ServiceProvider> serviceProvider = queryTemplate.query(query, new ServiceProviderRowMapperForAdmin());
 		return serviceProvider.isEmpty() ? null : serviceProvider;
 	}
 	
