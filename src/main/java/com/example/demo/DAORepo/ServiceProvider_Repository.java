@@ -148,7 +148,8 @@ public class ServiceProvider_Repository {
     	int rowsAffected = jdbctemplate.update(query, ServiceId);
         return rowsAffected;
     }
-    
+
+
     public int updateAndSave(SearchService searchService, String ServiceProviderId) {
     	 String query = "UPDATE searchservice " +
                  "SET price = ?,  category = ?, rating = ? " +
@@ -192,10 +193,6 @@ public class ServiceProvider_Repository {
         String query = "UPDATE searchservice SET status = ? WHERE provider_id = ?";
         jdbctemplate.update(query, provider.getStateName(), provider.getProviderId());
     }
-
-
-
-
 
     public List<ServiceProviderBookingDTO> findBookedServices(String serviceProviderId) {
         String query = """
