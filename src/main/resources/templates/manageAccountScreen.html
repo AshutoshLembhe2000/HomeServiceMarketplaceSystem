@@ -18,10 +18,20 @@
         .section-header {
             margin-top: 20px;
         }
+        .status-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            background-color: #eaf7ea;
+            color: #2e7d32;
+        }
     </style>
 </head>
 <body>
     <h1>Manage Users</h1>
+
+    <!-- Status Message -->
+    <div th:if="${status}" class="status-message" th:text="${status}"></div>
     
     <!-- Customer Section -->
     <div>
@@ -43,7 +53,9 @@
                     <td th:text="${customer.email}"></td>
                     <td th:text="${customer.city}"></td>
                     <td>
-                        <button th:onclick="'deleteCustomer(' + ${customer.id} + ')'">Delete</button>
+                        <form th:action="@{/Admin/manage-accounts/customer/{id}(id=${customer.id})}" method="get">
+                            <button type="submit">Delete</button>
+                        </form>
                     </td>
                 </tr>
             </tbody>
@@ -59,7 +71,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Service</th>
+                    <th>City</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -68,49 +80,15 @@
                     <td th:text="${provider.id}"></td>
                     <td th:text="${provider.name}"></td>
                     <td th:text="${provider.email}"></td>
-					<td th:text="${provider.city}"></td>
+                    <td th:text="${provider.city}"></td>
                     <td>
-                        <button th:onclick="'deleteProvider(' + ${provider.id} + ')'">Delete</button>
+                        <form th:action="@{/Admin/manage-accounts/service-provider/{id}(id=${provider.id})}" method="get">
+                            <button type="submit">Delete</button>
+                        </form>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-
-    <script>
-        // Function to delete a customer
-        function deleteCustomer(customerId) {
-            fetch(`/Admin/manage-accounts/customer/${customerId}`, {
-                method: 'GET'
-            }).then(response => {
-                if (response.ok) {
-                    alert('Customer deleted successfully');
-                    location.reload();
-                } else {
-                    alert('Error deleting customer');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong. Please try again later.');
-            });
-        }
-
-        // Function to delete a service provider
-        function deleteProvider(providerId) {
-            fetch(`/Admin/manage-accounts/service-provider/${providerId}`, {
-                method: 'GET'
-            }).then(response => {
-                if (response.ok) {
-                    alert('Service provider deleted successfully');
-                    location.reload();
-                } else {
-                    alert('Error deleting service provider');
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong. Please try again later.');
-            });
-        }
-    </script>
 </body>
 </html>
