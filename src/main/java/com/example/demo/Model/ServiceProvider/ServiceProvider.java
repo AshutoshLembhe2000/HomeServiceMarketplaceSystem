@@ -17,8 +17,6 @@ public class ServiceProvider extends User implements IServiceProviderSubject{
 	    private String currentState;
 	    private IServiceProviderStatusState state;
 	    private String status;
-//	    private String city;
-//	    private String email;
 	    
 	    private final List<Customer> observers = new ArrayList<>();
 
@@ -33,21 +31,6 @@ public class ServiceProvider extends User implements IServiceProviderSubject{
 	        notifyObservers("Service Provider state changed to: " + state.getStateName());
 	    }
 	    
-//	    public String getCity() {
-//	        return city;
-//	    }
-//
-//	    public void setCity(String city) {
-//	        this.city = city;
-//	    }
-//
-//	    public String getEmail() {
-//	        return email;
-//	    }
-//
-//	    public void setEmail(String email) {
-//	        this.email = email;
-//	    }
 
 	    public void handleState(ServiceProvider_Repository serviceProviderRepository) {
 	        state.handleStatusState(this, serviceProviderRepository);
