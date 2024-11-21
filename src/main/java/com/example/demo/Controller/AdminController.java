@@ -69,22 +69,32 @@ public class AdminController {
     }
     
     @GetMapping("/manage-accounts/customer/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable int id) {
+    public String deleteCustomer(@PathVariable int id, Model model) {
         int rowsAffected = adminservice.deleteUser(id, "customer");
         if (rowsAffected > 0) {
-            return ResponseEntity.ok("Customer deleted successfully");
+            model.addAttribute("status", "Customer deleted successfully");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found");
+            model.addAttribute("status", "Customer not found");
         }
+        // Reload the updated lists
+        model.addAttribute("customers", adminservice.getAllCustomers());
+        model.addAttribute("serviceProviders", adminservice.getAllServiceProviders());
+        return "manageAccountScreen";
     }
+
     
     @GetMapping("/manage-accounts/service-provider/{id}")
-    public ResponseEntity<String> deleteServiceProvider(@PathVariable int id) {
+    public String deleteServiceProvider(@PathVariable int id, Model model) {
         int rowsAffected = adminservice.deleteUser(id, "serviceProvider");
         if (rowsAffected > 0) {
-            return ResponseEntity.ok("Service Provider deleted successfully");
+            model.addAttribute("status", "Service Provider deleted successfully");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Service Provider not found");
+            model.addAttribute("status", "Service Provider not found");
         }
+        // Reload the updated lists
+        model.addAttribute("customers", adminservice.getAllCustomers());
+        model.addAttribute("serviceProviders", adminservice.getAllServiceProviders());
+        return "manageAccountScreen";
     }
+
 }

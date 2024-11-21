@@ -125,7 +125,7 @@ public class ServiceProvider_Repository {
     @SuppressWarnings("deprecation")
 	public List<ServiceProvider> getServiceProviderServices() {
     	String query = "SELECT  ss.provider_id, ss.status, " +
-                "sp.name AS provider_name, sp.city " +
+                "sp.name AS provider_name, sp.city, sp.email" +
                 "FROM searchservice ss " +
                 "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
                 "WHERE ss.provider_id = ?";
