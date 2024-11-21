@@ -17,7 +17,11 @@ public class ServiceProviderRowMapper implements RowMapper<ServiceProvider>{
 		 serviceProvider.setName(rs.getString("provider_name")); 
 		 serviceProvider.setCity(rs.getString("city"));
 		 serviceProvider.setEmail(rs.getString("email")); 
+<<<<<<< Updated upstream
 		 serviceProvider.setStatus(rs.getString("status")); 
+=======
+		 serviceProvider.setStatus(rs.getString("status"));
+>>>>>>> Stashed changes
 		 serviceProvider.setProviderId(rs.getString("provider_id"));		
 		return serviceProvider;
 	    }
