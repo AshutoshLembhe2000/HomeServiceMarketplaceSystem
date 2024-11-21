@@ -165,7 +165,6 @@ public class ServiceProvider_Controller {
         try {
             serviceproviderservice.updateBookingStatus(bookingId, status);
 
-            
             List<ServiceProvider> res = serviceproviderservice.getServiceProviderByServiceId();
             List<Customer> customers = customerService.getAllCustomersByCity(res.get(0).getCity());
 
