@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 public class SearchServiceRowMapper implements RowMapper<SearchService> {
     public SearchService mapRow(ResultSet rs, int rowNum) throws SQLException {
         SearchService searchService = new SearchService();
-        searchService.setServiceId(rs.getString("service_id"));
+        searchService.setServiceId(rs.getInt("service_id"));
         searchService.setProviderId(rs.getInt("provider_id"));
         searchService.setSkill(rs.getString("skill"));
         searchService.setRating(rs.getFloat("rating"));
