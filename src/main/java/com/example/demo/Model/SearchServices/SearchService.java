@@ -1,7 +1,7 @@
 package com.example.demo.Model.SearchServices;
 
 public class SearchService {
-    private String serviceId;
+    private int serviceId;
     private int providerId;
     private String skill;
     private float rating;
@@ -12,11 +12,11 @@ public class SearchService {
     private String city;
 
     // Getters and Setters
-    public String getServiceId() {
+    public int getServiceId() {
         return serviceId;
     }
 
-    public void setServiceId(String serviceId) {
+    public void setServiceId(int serviceId) {
         this.serviceId = serviceId;
     }
 
