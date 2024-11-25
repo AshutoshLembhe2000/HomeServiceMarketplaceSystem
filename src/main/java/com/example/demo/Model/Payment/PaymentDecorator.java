@@ -1,10 +1,10 @@
 package com.example.demo.Model.Payment;
 
-public abstract class PaymentDecorator extends Payment {
-	protected Payment decoratedPayment;
+public abstract class PaymentDecorator extends BasePayment {
+    protected BasePayment decoratedPayment;
 
-    public PaymentDecorator(Payment payment) {
-        super(payment.getAmount(), payment.getStatus(), payment.getTimestamp());
+    public PaymentDecorator(BasePayment payment) {
+        super(payment.getAmount(), payment.getStatus());
         this.decoratedPayment = payment;
     }
 

@@ -93,6 +93,4 @@ public class ServiceProviderService {
 		return serviceprovider_repository.getServiceProviderServices();
 	}
 
-
-
 }

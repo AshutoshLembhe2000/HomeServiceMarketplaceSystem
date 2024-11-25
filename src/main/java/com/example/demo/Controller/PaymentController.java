@@ -49,7 +49,7 @@ public class PaymentController {
     @GetMapping("/makePayment")
     public String showPaymentPage(@RequestParam String serviceId,Model model) {
     	model.addAttribute("serviceId",serviceId);
-        model.addAttribute("payment", new Payment());
+        model.addAttribute("payment", new Payment(0.0f, "PENDING"));
         return "paymentForm"; // Thymeleaf template for payment form
     }
 

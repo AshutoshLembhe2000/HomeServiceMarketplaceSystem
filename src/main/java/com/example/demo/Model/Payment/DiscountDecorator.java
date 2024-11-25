@@ -2,15 +2,15 @@ package com.example.demo.Model.Payment;
 
 public class DiscountDecorator extends PaymentDecorator {
 
-    public DiscountDecorator(Payment payment) {
+    public DiscountDecorator(BasePayment payment) {
         super(payment);
     }
 
     @Override
     public int processPayment() {
-        float discountedAmount = decoratedPayment.getAmount() * 0.95f; // 5% discount
+        float discountedAmount = decoratedPayment.getAmount() * 0.95f; // Apply 5% discount
         decoratedPayment.setAmount(discountedAmount);
-        System.out.println("inside discount decorator, 5% Discount Applied");
+        System.out.println("5% Discount Applied.");
         return decoratedPayment.processPayment();
     }
 }

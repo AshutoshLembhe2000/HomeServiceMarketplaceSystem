@@ -17,7 +17,7 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
     private int getcount = 0;
     private String finalmessage="";
-	public String processFinalPayment(Payment payment, int customerId, String serviceId) {
+	public String processFinalPayment(BasePayment payment, int customerId, String serviceId) {
         // Check booking count for customer to decide on discounts
     	Map<String,Object> count;
     	
