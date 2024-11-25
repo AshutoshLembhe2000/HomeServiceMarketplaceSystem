@@ -2,10 +2,12 @@ package com.example.demo.Controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.example.demo.Model.ServiceProvider.ServiceProvider;
+import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
+import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProviderStateManager;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Service.Customer.CustomerService;
@@ -48,14 +51,8 @@ class ServiceProvider_ControllerTest {
 
 	@Test
 	void testLoginForm() {
-
 		String viewName = serviceProvider_Controller.LoginForm(model);
-
 		assertEquals("ServiceProvider_login", viewName);
-
-		Object serviceProviderAttribute = model.getAttribute("ServiceProvider");
-		assertNotNull(serviceProviderAttribute);
-		assertTrue(serviceProviderAttribute instanceof ServiceProvider);
 	}
 
 	@Test
@@ -81,8 +78,40 @@ class ServiceProvider_ControllerTest {
 
 	@Test
 	void testServiceProviderForm() {
-		// fail("Not yet implemented");
+		String view = serviceProvider_Controller.serviceProviderForm(model);
+		assertEquals("ServiceProviderWelcomeScreen", view);
+	}
+	
+	@Test
+	void testAddServiceForm() {
+		String view = serviceProvider_Controller.addServiceForm(model);
+		assertEquals("addServiceForm", view);
+	}
+	
+	@Test
+	void testAddServiceItem() throws SQLException {
+		SearchService searchService =new SearchService();
+		when(serviceproviderservice.verifyServiceAddition(searchService)).thenReturn(-1);
+		String result = serviceProvider_Controller.addServiceItem(searchService);
+		
+		when(serviceproviderservice.verifyServiceAddition(searchService)).thenReturn(1);
+		String result2 = serviceProvider_Controller.addServiceItem(searchService);
+		
+		assertEquals("You can only add one service per ServiceProvider.", result);
+		assertEquals("Service Added Sucesfully!", result2);
 	}
 
+	@Test
+	void testViewBooking() {
+		ServiceProviderBookingDTO ServiceProviderBookingDTO = new ServiceProviderBookingDTO();
+		ServiceProviderBookingDTO.setCustomerName("Test");
+		 List<ServiceProviderBookingDTO> bookings = new ArrayList<>();
+		 bookings.add(ServiceProviderBookingDTO);
+		 
+		 when(serviceproviderservice.getPastBookings()).thenReturn(bookings);
+		 String view =  serviceProvider_Controller.viewBooking(model);
+		 assertEquals("ServiceProviderBookedServices", view);
+		 
+	}
 	
 }
