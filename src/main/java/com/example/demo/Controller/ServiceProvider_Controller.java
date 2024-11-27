@@ -139,7 +139,6 @@ public class ServiceProvider_Controller {
     @PostMapping("/DeleteService/{providerName}/{serviceId}")
     public RedirectView deleteService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String ServiceId, Model model) {
     	int res = serviceproviderservice.deleteSelectedService(providerName,ServiceId);
-       
         	return new RedirectView("/ServiceProvider/ListServices");
     }
 

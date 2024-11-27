@@ -2,13 +2,14 @@ package com.example.demo.Controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.demo.Model.Customer.Customer;
+import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,6 +44,9 @@ class ServiceProvider_ControllerTest {
 
 	@Mock
 	private Model model;
+
+	@Mock
+	private RedirectAttributes redirectAttributes;
 
 	@BeforeEach
 	void setUp() {
@@ -104,14 +108,87 @@ class ServiceProvider_ControllerTest {
 	@Test
 	void testViewBooking() {
 		ServiceProviderBookingDTO ServiceProviderBookingDTO = new ServiceProviderBookingDTO();
-		ServiceProviderBookingDTO.setCustomerName("Test");
+		 ServiceProviderBookingDTO.setCustomerName("Test");
 		 List<ServiceProviderBookingDTO> bookings = new ArrayList<>();
 		 bookings.add(ServiceProviderBookingDTO);
 		 
-		 when(serviceproviderservice.getPastBookings()).thenReturn(bookings);
+		 when(serviceproviderservice.getBookedServices()).thenReturn(bookings);
 		 String view =  serviceProvider_Controller.viewBooking(model);
 		 assertEquals("ServiceProviderBookedServices", view);
 		 
 	}
-	
+
+	@Test
+    void testViewPastBooking()
+	{
+		ServiceProviderBookingDTO serviceProviderBookingDTO = new ServiceProviderBookingDTO();
+		List<ServiceProviderBookingDTO> pastBookings = new ArrayList<>();
+		pastBookings.add(serviceProviderBookingDTO);
+
+		when(serviceproviderservice.getPastBookings()).thenReturn(pastBookings);
+		String view =  serviceProvider_Controller.viewPastBookings(model);
+		assertEquals("PastBooking", view);
+
+	}
+
+	@Test
+	void testListServices()
+	{
+		when(globalcontext.getServiceProviderId()).thenReturn(String.valueOf(1));
+		String view = serviceProvider_Controller.listServices(model);
+		assertEquals("ListServices", view);
+
+	}
+
+	@Test
+	void testdeleteService()
+	{
+		when(serviceproviderservice.deleteSelectedService("John", "1")).thenReturn(1);
+		RedirectView view = serviceProvider_Controller.deleteService("John", "1", model);
+		//assertThat(view).isNotNull();
+		assertThat(view.getUrl()).isEqualTo("/ServiceProvider/ListServices");
+
+	}
+
+	@Test
+	void testmodifyService()
+	{
+		SearchService searchService = new SearchService();
+		searchService.setProviderId(1);
+
+		List<SearchService> searchServicesList = new ArrayList<>();
+		searchServicesList.add(searchService);
+
+		when(serviceproviderservice.getServiceForModify("name", "1")).thenReturn(searchServicesList);
+		String view = serviceProvider_Controller.modifyService("name", "1", model);
+		assertEquals("ModifyService", view);
+
+	}
+
+	@Test
+	void testsavemodifiedservices()
+	{
+		SearchService searchService = new SearchService();
+		when(serviceproviderservice.updateService(searchService)).thenReturn(1);
+		RedirectView view = serviceProvider_Controller.saveModifiedService(searchService, model);
+		assertThat(view.getUrl()).isEqualTo("/ServiceProvider/ListServices");
+	}
+
+	@Test
+	void testupdateBookingStatus()
+	{
+		ServiceProvider serviceProvider = new ServiceProvider();
+		Customer customer = new Customer();
+
+		List<ServiceProvider> serviceProviderList = new ArrayList<>();
+		List<Customer> customerList = new ArrayList<>();
+
+		doNothing().when(serviceproviderservice).updateBookingStatus("1", "Pending");
+		doNothing().when(serviceProviderStateManager).changeState(serviceProvider,"Booking", customerList);
+
+		RedirectView view = serviceProvider_Controller.updateBookingStatus("1", "Pending",redirectAttributes);
+		assertThat(view.getUrl()).isEqualTo("/ServiceProvider/ViewBooking");
+
+
+	}
 }

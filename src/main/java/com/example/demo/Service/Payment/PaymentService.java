@@ -2,6 +2,7 @@ package com.example.demo.Service.Payment;
 
 import com.example.demo.Model.Payment.*;
 import com.example.demo.DAORepo.PaymentRepository;
+import com.example.demo.Service.OTP.OTPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +12,18 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class PaymentService {
+public class PaymentService
+{
 
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private OTPService otpService;
     private int getcount = 0;
     private String finalmessage="";
-	public String processFinalPayment(BasePayment payment, int customerId, String serviceId) {
+
+	public String processFinalPayment(BasePayment payment, int customerId, String serviceId)
+    {
         // Check booking count for customer to decide on discounts
     	Map<String,Object> count;
     	
@@ -48,21 +54,26 @@ public class PaymentService {
         String bookingId = paymentRepository.createBooking(customerId, serviceId);
         payment.setBookingId(bookingId);
 
+
         // Save payment in the database
         paymentRepository.savePayment(bookingId, finalamount, "COMPLETED", payment.getTimestamp());
 
+
+        String otpCode = otpService.generateAndStoreOTP(bookingId);
+
         // Update booking payment status
         paymentRepository.updateBookingPaymentStatus(bookingId);
+
         
         //Letting customer know if they have got any discount or not
         if (getcount > 4) {
-            finalmessage="Final amount after 10% loyalty discount: " + finalamount + " Booking ID: " + bookingId;
+            finalmessage="Final amount after 10% loyalty discount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: "+ otpCode;
         } else if (getcount >=2 && 4<=getcount) {
-        	finalmessage="Final amount after 5% discount: " + finalamount + " Booking ID: " + bookingId;
+        	finalmessage="Final amount after 5% discount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: "+ otpCode;
         }
         else
         {
-        	finalmessage="Final amount: " + finalamount + " Booking ID: " + bookingId;
+        	finalmessage="Final amount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: "+ otpCode;
         }
         return finalmessage;
     }
