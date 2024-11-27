@@ -75,6 +75,7 @@ public class ServiceProviderService {
         return serviceprovider_repository.findBookedServices(globalContext.getServiceProviderId());
     }
 
+
     public List<ServiceProviderBookingDTO> getPastBookings() {
         return serviceprovider_repository.getPastBookings(globalContext.getServiceProviderId());
     }
