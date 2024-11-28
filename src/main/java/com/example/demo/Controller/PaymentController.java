@@ -62,7 +62,12 @@ public class PaymentController {
         String cusName = customerControllergetter.getGlobalCustomername();
         Customer customer = customerServices.getCustomerByName(cusName);
         int customerId = customer.getId();
-        String message = paymentService.processFinalPayment(payment, customerId, serviceId);
+
+        // Observer Pattern
+        // Fetch ServiceProvider Details for notifying ServiceProvider and Customer about booking confirmation
+        List<ServiceProvider> serviceProvider = serviceproviderservice.getServiceProvider(serviceId);
+
+        String message = paymentService.processFinalPayment(payment, customer, serviceId,serviceProvider.get(0));
         model.addAttribute("message", message);
 
 

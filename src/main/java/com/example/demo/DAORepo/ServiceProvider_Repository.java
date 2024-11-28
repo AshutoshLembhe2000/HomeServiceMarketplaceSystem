@@ -229,7 +229,12 @@ public class ServiceProvider_Repository {
     }
 
 
+    public List<ServiceProvider> getServiceProvider(String serviceId) {
+        String query = "SELECT sp.provider_id, sp.city, sp.email, sp.name AS provider_name, ss.status " +
+                "FROM ServiceProvider sp " +
+                "JOIN SearchService ss ON sp.provider_id = ss.provider_id " +
+                "WHERE ss.service_id = ?;";
 
-
-
+        return jdbctemplate.query(query, new Object[]{serviceId}, new ServiceProviderRowMapper());
+    }
 }
