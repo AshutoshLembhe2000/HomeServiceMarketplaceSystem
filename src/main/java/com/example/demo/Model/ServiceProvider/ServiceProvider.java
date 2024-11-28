@@ -11,7 +11,7 @@ import com.example.demo.Model.Customer.ICustomerObserver;
 import com.example.demo.Model.User.User;
 
 @Component
-public class ServiceProvider extends User implements IServiceProviderSubject{
+public class ServiceProvider extends User implements IServiceProviderSubject, IServiceProviderObserver{
 	
 	    private String providerId;
 	    private String currentState;
@@ -82,7 +82,14 @@ public class ServiceProvider extends User implements IServiceProviderSubject{
 	            observer.update(message,  observer.getEmail());
 	        }
 		}
-		
+
+		//Observer update method for payment notification
+		@Override
+		public void update(String message, String email) {
+			// TODO Auto-generated method stub
+			System.out.println("Sending notification to " + email + ": " + message);
+		}
+
 	}
 
 

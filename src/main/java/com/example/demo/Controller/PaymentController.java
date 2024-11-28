@@ -56,15 +56,24 @@ public class PaymentController {
     @PostMapping("/processPayment")
     public String processPayment(@ModelAttribute Payment payment,
                                  @RequestParam String serviceId,
-                                 Model model) {
-    	String cusName=customerControllergetter.getGlobalCustomername();
-    	Customer customer=customerServices.getCustomerByName(cusName);
-    	int customerId=customer.getId();
-        String message = paymentService.processFinalPayment(payment, customerId, serviceId);
-        model.addAttribute("message", message);
-        return "paymentResult"; // Thymeleaf template to display the result
-    }
+                                 Model model)
 
+    {
+        String cusName = customerControllergetter.getGlobalCustomername();
+        Customer customer = customerServices.getCustomerByName(cusName);
+        int customerId = customer.getId();
+
+        // Observer Pattern
+        // Fetch ServiceProvider Details for notifying ServiceProvider and Customer about booking confirmation
+        List<ServiceProvider> serviceProvider = serviceproviderservice.getServiceProvider(serviceId);
+
+        String message = paymentService.processFinalPayment(payment, customer, serviceId,serviceProvider.get(0));
+        model.addAttribute("message", message);
+
+
+        return "paymentResult"; // Thymeleaf template to display the result
+
+    }
 
     // Handles GET request to show OTP form
     @GetMapping("/VerifyOTP")
@@ -72,9 +81,6 @@ public class PaymentController {
         model.addAttribute("bookingId", bookingId);
         return "VerifyOTP"; // Thymeleaf template for OTP form
     }
-
-
-
 
     @PostMapping("/VerifyOTP")
     public RedirectView verifyOTP(@RequestParam("bookingId") String bookingId,
@@ -96,4 +102,6 @@ public class PaymentController {
             return new RedirectView("/ServiceProvider/VerifyOTP?bookingId=" + bookingId);
         }
     }
+
+
 }

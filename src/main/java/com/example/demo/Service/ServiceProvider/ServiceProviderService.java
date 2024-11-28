@@ -22,6 +22,9 @@ public class ServiceProviderService {
         this.globalContext = globalContext;
     }
 
+    public List<ServiceProvider> getServiceProvider(String serviceId) {
+        return serviceprovider_repository.getServiceProvider(serviceId);
+    }
 
 
     public int VerifyifServiceProviderExist(ServiceProvider serviceprovider)
@@ -74,6 +77,7 @@ public class ServiceProviderService {
     {
         return serviceprovider_repository.findBookedServices(globalContext.getServiceProviderId());
     }
+
 
     public List<ServiceProviderBookingDTO> getPastBookings() {
         return serviceprovider_repository.getPastBookings(globalContext.getServiceProviderId());
