@@ -11,8 +11,17 @@ public class Booking {
     protected String booking_date;
     protected String status;
     protected String payement_status;
+    protected String skill;
+    
+    public String getSkill() {
+		return skill;
+	}
 
-    public String getBooking_id() {
+	public void setSkill(String skill) {
+		this.skill = skill;
+	}
+
+	public String getBooking_id() {
         return booking_id;
     }
 

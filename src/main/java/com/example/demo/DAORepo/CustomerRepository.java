@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.Model.Booking.Booking;
 import com.example.demo.Model.Booking.BookingRowMapper;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.*;
@@ -64,6 +65,7 @@ public class CustomerRepository {
 		return customers;
 	}
 
+	@SuppressWarnings("deprecation")
 	public List<ServiceProviderBookingDTO> findAllCustomerCurrentBooking(String custName) {
 		String queryString =  """
                 SELECT 
@@ -88,5 +90,34 @@ public class CustomerRepository {
 		  String query = "UPDATE booking SET status = 'REJECTED' WHERE booking_id = ?";
 		  queryTemplate.update(query, bookingId);
 		  return 1;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public List<Booking> findAllCustomerPastBooking(String cusName)
+	{
+		String queryString =  """
+                SELECT 
+                b.booking_id AS booking_id,
+                b.status AS booking_status,
+                b.booking_date,
+                b.service_id,
+                c.name AS customer_name,
+                ss.skill
+            FROM 
+                booking b
+            JOIN 
+                customer c ON b.customer_id = c.customer_id
+            JOIN 
+                searchservice ss ON b.service_id = ss.service_id
+            WHERE
+                c.name = ? AND b.status IN ('COMPLETED');""";
+
+        return queryTemplate.query(queryString, new Object[]{cusName}, new RatingRowMapping());
+	}
+	
+	public int updateRating(int service_id,String rating) {
+		
+		String queryString="UPDATE searchservice SET rating = ? WHERE service_id=?;";
+		return queryTemplate.update(queryString,new Object[]{rating,service_id});
 	}
 }
