@@ -12,6 +12,7 @@ import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
+import com.example.demo.Model.Booking.Booking;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.SearchServices.SearchService;
@@ -114,6 +115,24 @@ public class CustomerController {
     }
     /*---------------Search Service---------------------------*/
     
+    /*---------------Rate Service---------------------------*/
+    @GetMapping("/rateService")
+    public String rateService(Model model)
+    {
+    	List<Booking> booking = customerService.getAllPastBooking(this.getGlobalCustomername());
+		model.addAttribute("Booking",booking);
+        return "CustomerPastServices";
+    }
+    
+    @PostMapping("/postRating")
+    @ResponseBody
+    public String postService(@RequestParam int service_id,@RequestParam String rating) {
+    	int response=customerService.postRating(service_id,rating);
+    	return "Rating posted";
+		
+    }
+    /*---------------Rate Service---------------------------*/
+    
     @GetMapping("/book")
     //@ResponseBody
     public String bookservice(@RequestParam String serviceId, @RequestParam String customerCity, @RequestParam String serviceCity,
@@ -138,6 +157,8 @@ public class CustomerController {
     		return response;
     	}
     }
+    
+    
     
     @GetMapping("/CustomerCurrentBookedServices")
     public String getCustomerCurrentBooking(Model model) {
