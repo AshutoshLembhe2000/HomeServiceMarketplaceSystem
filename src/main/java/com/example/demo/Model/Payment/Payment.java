@@ -14,7 +14,7 @@ public class Payment extends BasePayment  {
     }
 
     @Override
-    public int processPayment() {
+    public float processPayment() {
         this.setStatus("COMPLETED");
         notifyObservers();
         return (int) getAmount();

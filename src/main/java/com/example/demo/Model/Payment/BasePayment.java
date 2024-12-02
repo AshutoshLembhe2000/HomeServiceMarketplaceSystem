@@ -21,7 +21,7 @@ public abstract class BasePayment implements IPaymentSubject {
     }
 
     // Abstract method for processing payment
-    public abstract int processPayment();
+    public abstract float processPayment();
 
     // Common methods for all payments
     public String getBookingId() {
