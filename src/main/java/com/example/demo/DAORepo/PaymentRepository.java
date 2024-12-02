@@ -22,6 +22,28 @@ public class PaymentRepository {
         String sql = "SELECT COUNT(*) FROM booking WHERE customer_id = ?";
         return queryTemplate.queryForList(sql, new Object[] {customerId});
     }
+    
+    //
+    public int getServiceProviderIdByServiceId(String serviceId) {
+        String sql = "SELECT provider_id FROM searchservice WHERE service_id = ?";
+        
+        // Query for the service provider ID
+        List<Map<String, Object>> result = queryTemplate.queryForList(sql, new Object[] {serviceId});
+        
+        // If no result is found, throw an exception or handle the case as needed
+        if (result.isEmpty()) {
+            throw new IllegalArgumentException("No service provider found for service ID: " + serviceId);
+        }
+        
+        // Get the first result (assuming there's only one service provider per service_id)
+        Map<String, Object> row = result.get(0);
+        
+        // Return the service_provider_id as an integer
+        return (Integer) row.get("provider_id");
+    }
+
+
+
 
     public String createBooking(int customerId, String serviceId) {
         String bookingId = "BOOK" + System.currentTimeMillis(); // Generate unique booking ID
