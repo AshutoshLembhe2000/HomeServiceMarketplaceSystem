@@ -125,7 +125,7 @@ public class ServiceProvider_Repository {
     @SuppressWarnings("deprecation")
 	public List<ServiceProvider> getServiceProviderServices() {
     	String query = "SELECT  ss.provider_id, ss.status, " +
-                "sp.name AS provider_name, sp.city, sp.email" +
+                "sp.name AS provider_name, sp.city, sp.email " +
                 "FROM searchservice ss " +
                 "JOIN serviceprovider sp ON ss.provider_id = sp.provider_id " +
                 "WHERE ss.provider_id = ?";
@@ -229,7 +229,12 @@ public class ServiceProvider_Repository {
     }
 
 
+    public List<ServiceProvider> getServiceProvider(String serviceId) {
+        String query = "SELECT sp.provider_id, sp.city, sp.email, sp.name AS provider_name, ss.status " +
+                "FROM ServiceProvider sp " +
+                "JOIN SearchService ss ON sp.provider_id = ss.provider_id " +
+                "WHERE ss.service_id = ?;";
 
-
-
+        return jdbctemplate.query(query, new Object[]{serviceId}, new ServiceProviderRowMapper());
+    }
 }

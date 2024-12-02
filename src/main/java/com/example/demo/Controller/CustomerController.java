@@ -5,10 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
+
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
+import com.example.demo.Model.Booking.Booking;
+import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.SearchServices.SearchService;
 
@@ -110,6 +115,24 @@ public class CustomerController {
     }
     /*---------------Search Service---------------------------*/
     
+    /*---------------Rate Service---------------------------*/
+    @GetMapping("/rateService")
+    public String rateService(Model model)
+    {
+    	List<Booking> booking = customerService.getAllPastBooking(this.getGlobalCustomername());
+		model.addAttribute("Booking",booking);
+        return "CustomerPastServices";
+    }
+    
+    @PostMapping("/postRating")
+    @ResponseBody
+    public String postService(@RequestParam int service_id,@RequestParam String rating) {
+    	int response=customerService.postRating(service_id,rating);
+    	return "Rating posted";
+		
+    }
+    /*---------------Rate Service---------------------------*/
+    
     @GetMapping("/book")
     //@ResponseBody
     public String bookservice(@RequestParam String serviceId, @RequestParam String customerCity, @RequestParam String serviceCity,
@@ -134,4 +157,26 @@ public class CustomerController {
     		return response;
     	}
     }
+    
+    
+    
+    @GetMapping("/CustomerCurrentBookedServices")
+    public String getCustomerCurrentBooking(Model model) {
+    	List<ServiceProviderBookingDTO> booking = customerService.getAllCurrentBooking(this.getGlobalCustomername());
+		model.addAttribute("ServiceProviderBookingDTO",booking);
+        return "CustomerCurrentBookedServices";
+    }
+    
+    @PostMapping("/CancelBooking/{bookingId}/{bookingStatus}")
+    @ResponseBody
+    public RedirectView deleteService(@PathVariable("bookingId") String bookingId,@PathVariable("bookingStatus") String bookingStatus,RedirectAttributes redirectAttributes) {
+    	int res = customerService.cancelSelectedBooking(bookingId,bookingStatus);
+    	if(res!=0) {
+    		redirectAttributes.addFlashAttribute("message", "Booking Status Rejected Successfully!!");
+    		return new RedirectView("/Customer/CustomerCurrentBookedServices");
+    	}
+    	redirectAttributes.addFlashAttribute("message", "Booking status cannot be rejected");
+    	return new RedirectView("/Customer/CustomerCurrentBookedServices");
+    }
+    
 }

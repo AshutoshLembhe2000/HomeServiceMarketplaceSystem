@@ -10,6 +10,7 @@ public class OTPServiceModel {
     private String otp_code;
     private String timestamp;
 
+
     // Getters and Setters
     public String getOtp_id() {
         return otp_id;

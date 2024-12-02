@@ -26,5 +26,11 @@ public class OTPRepository {
         }
     }
 
+    // Method to save OTP to the database
+    public void saveOTP(OTPServiceModel otpService) {
+        String sql = "INSERT INTO OTPService (booking_id, otp_code, timestamp) VALUES (?, ?, ?)";
+        jdbctemplate.update(sql, otpService.getBooking_id(), otpService.getOtp_code(), otpService.getTimestamp());
+    }
+
 
 }
