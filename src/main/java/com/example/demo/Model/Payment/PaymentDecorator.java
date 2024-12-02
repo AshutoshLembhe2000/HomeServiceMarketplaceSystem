@@ -9,7 +9,7 @@ public abstract class PaymentDecorator extends BasePayment {
     }
 
     @Override
-    public int processPayment() {
+    public float processPayment() {
         return decoratedPayment.processPayment();
     }
 }
