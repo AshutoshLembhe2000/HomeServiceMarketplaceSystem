@@ -10,6 +10,7 @@ import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.ServiceProvider.ServiceProviderService;
+import com.example.demo.Service.WalletService.WalletService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,9 @@ public class ServiceProvider_Controller {
     private final IUserFactory userFactory;
     
 	private  final GlobalContext globalcontext; 
+	
+	@Autowired
+	private WalletService walletService;  // Inject the WalletService to fetch wallet balance
 
     public ServiceProvider_Controller(ServiceProviderService serviceproviderservice, IUserFactory userFactory,GlobalContext globalcontext, ServiceProviderStateManager serviceProviderStateManager, CustomerService customerService) {
         this.serviceproviderservice = serviceproviderservice;
@@ -92,6 +96,14 @@ public class ServiceProvider_Controller {
 
     @GetMapping("/ServiceProviderWelcomeScreen")
     public String serviceProviderForm(Model model){
+    	// Get the current logged-in service provider's ID
+        String serviceProviderId = globalcontext.getServiceProviderId();
+        
+        // Fetch the wallet balance using the WalletService
+        float walletBalance = walletService.getWalletBalanceByUserId(Integer.parseInt(serviceProviderId), "SERVICE_PROVIDER");
+        
+        // Add the wallet balance to the model
+        model.addAttribute("walletBalance", walletBalance);
     	return "ServiceProviderWelcomeScreen";
 	}
     

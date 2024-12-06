@@ -9,14 +9,14 @@ import com.example.demo.Service.WalletService.WalletService;
 public class WalletController {
 	private WalletService walletService;
 
-    @GetMapping("/{userId}")
-    public Wallet getWallet(@PathVariable int userId) {
-        return walletService.getWalletByUserId(userId);
+    @GetMapping("/{userId}/{userType}")
+    public Wallet getWallet(@PathVariable int userId, @PathVariable String userType) {
+        return walletService.getWalletByUserIdAndType(userId, userType);
     }
 
     @PostMapping("/addFunds")
-    public String addFunds(@RequestParam int userId, @RequestParam float amount) {
-        walletService.updateWalletBalance(userId, amount);
+    public String addFunds(@RequestParam int userId, @RequestParam String userType, @RequestParam float amount) {
+        walletService.updateWalletBalance(userId, amount, userType);
         return "Funds added successfully!";
     }
 }
