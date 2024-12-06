@@ -12,6 +12,7 @@ import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
+import com.example.demo.Service.WalletService.WalletService;
 import com.example.demo.Model.Booking.Booking;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.Customer;
@@ -35,6 +36,9 @@ public class CustomerController {
     private final IUserFactory userFactory;
     @Autowired 
     private SearchServiceService searchServiceService;
+    
+    @Autowired
+    private WalletService walletService;
     
     @Autowired
     public CustomerController(CustomerService customerService,IUserFactory userFactory) {
@@ -94,8 +98,15 @@ public class CustomerController {
     	List<SearchService> services = searchServiceService.getAllServices();
 		Customer customer=customerService.getCustomerByName(this.getGlobalCustomername());
 		this.setGlobalCustomername(customer.getName());
+		
+		// Get Customer's balance
+		float walletBalance = walletService.getWalletBalanceByUserId(customer.getId(), "CUSTOMER");
+		
+		
 		model.addAttribute("customer",customer);
         model.addAttribute("services", services);
+        model.addAttribute("walletBalance", walletBalance); // Add balance to model
+        
         return "all-services";
     }
     

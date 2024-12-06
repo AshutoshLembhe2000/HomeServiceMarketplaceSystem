@@ -1,4 +1,4 @@
-	package com.example.demo.Service.WalletService;
+package com.example.demo.Service.WalletService;
 
 import com.example.demo.DAORepo.WalletRepository;
 import com.example.demo.Model.Wallet.Wallet;
@@ -11,25 +11,25 @@ public class WalletService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public Wallet getWalletByUserId(int userId) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+    public Wallet getWalletByUserIdAndType(int userId, String userType) {
+        Wallet wallet = walletRepository.findByUserIdAndType(userId, userType);
         if (wallet == null) {
-            throw new IllegalArgumentException("Wallet not found for user ID: " + userId);
+            throw new IllegalArgumentException("Wallet not found for user ID: " + userId + " and type: " + userType);
         }
         return wallet;
     }
 
-    public void updateWalletBalance(int userId, float amount) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+    public void updateWalletBalance(int userId, float amount, String userType) {
+        Wallet wallet = walletRepository.findByUserIdAndType(userId, userType);
         if (wallet == null) {
-            throw new IllegalArgumentException("Wallet not found for user ID: " + userId);
+            throw new IllegalArgumentException("Wallet not found for user ID: " + userId + " and type: " + userType);
         }
         float newBalance = wallet.getBalance() + amount; // Add amount to the existing balance
-        walletRepository.updateWalletBalance(userId, newBalance);
+        walletRepository.updateWalletBalance(userId, userType, newBalance);
     }
 
-    public boolean deductFromWallet(int userId, float amount) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+    public boolean deductFromWallet(int userId, float amount, String userType) {
+        Wallet wallet = walletRepository.findByUserIdAndType(userId, userType);
         if (wallet == null) {
             throw new IllegalArgumentException("Wallet not found for user ID: " + userId);
         }
@@ -37,14 +37,14 @@ public class WalletService {
             return false; // Insufficient balance
         }
         float newBalance = wallet.getBalance() - amount; // Deduct amount from the existing balance
-        walletRepository.updateWalletBalance(userId, newBalance);
+        walletRepository.updateWalletBalance(userId, userType, newBalance);
         return true;
     }
     
     
     // Get wallet balance by user ID
-    public float getWalletBalanceByUserId(int userId) {
-        Wallet wallet = walletRepository.findByUserId(userId);
+    public float getWalletBalanceByUserId(int userId, String userType) {
+        Wallet wallet = walletRepository.findByUserIdAndType(userId, userType);
         if (wallet != null) {
             return wallet.getBalance();
         }

@@ -55,7 +55,7 @@ public class PaymentController {
         int customerId = customer.getId();
 
         // Fetch the wallet balance of the logged-in customer
-        float walletBalance = walletService.getWalletBalanceByUserId(customerId);
+        float walletBalance = walletService.getWalletBalanceByUserId(customerId, "CUSTOMER");
 
         // Add serviceId and wallet balance to the model
         model.addAttribute("serviceId", serviceId);
@@ -82,13 +82,33 @@ public class PaymentController {
         List<ServiceProvider> serviceProvider = serviceproviderservice.getServiceProvider(serviceId);
 
         String message = paymentService.processFinalPayment(payment, customer, serviceId,serviceProvider.get(0));
+
         // Add the payment message to the model to display on the result page
         model.addAttribute("message", message);
-
 
         return "paymentResult"; // Thymeleaf template to display the result
 
     }
+    
+    // Get the balance of the end user
+    @GetMapping("/getWalletBalance")
+    public float getWalletBalanceByTypeAndId(String userType, int userId) {
+        float walletBalance = 0.0f;
+
+        if ("CUSTOMER".equalsIgnoreCase(userType)) {
+            // Fetch the wallet balance for the customer
+            walletBalance = walletService.getWalletBalanceByUserId(userId, "CUSTOMER");
+        } else if ("SERVICE_PROVIDER".equalsIgnoreCase(userType)) {
+            // Fetch the wallet balance for the service provider
+            walletBalance = walletService.getWalletBalanceByUserId(userId, "SERVICE_PROVIDER");
+        } else {
+            // Invalid userType, return 0 balance
+            throw new IllegalArgumentException("Invalid user type. Must be CUSTOMER or SERVICE_PROVIDER.");
+        }
+
+        return walletBalance;
+    }
+
 
 
     // Handles GET request to show OTP form
