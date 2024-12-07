@@ -48,6 +48,7 @@ public class ServiceProvider_Controller {
     }
 
     // Endpoint to register a new service provider
+    //Achyutam
     @GetMapping("/ServiceProviderRegistrationForm")
     public String checkServiceProvider(Model model)
     {
@@ -57,6 +58,7 @@ public class ServiceProvider_Controller {
     }
 
     // Register a new ServiceProvider
+    //Achyutam
     @PostMapping("/ServiceProviderRegistrationSuccess")
     @ResponseBody
     public RedirectView createServiceProvider(ServiceProvider serviceProvider) throws SQLException {
@@ -70,6 +72,7 @@ public class ServiceProvider_Controller {
 
 
 
+    //Achyutam
     @GetMapping("/ServiceProviderLoginForm")
     public String LoginForm(Model model)
     {
@@ -78,6 +81,7 @@ public class ServiceProvider_Controller {
         return "ServiceProvider_login";
     }
 
+    //Achyutam
     @PostMapping("/loginsucess")
     @ResponseBody
     public RedirectView loginServiceProvider(@RequestParam String email, @RequestParam String password,RedirectAttributes redirectAttributes) {
@@ -94,6 +98,7 @@ public class ServiceProvider_Controller {
         }
     }
 
+    //Dhruv
     @GetMapping("/ServiceProviderWelcomeScreen")
     public String serviceProviderForm(Model model){
     	// Get the current logged-in service provider's ID
@@ -107,13 +112,14 @@ public class ServiceProvider_Controller {
     	return "ServiceProviderWelcomeScreen";
 	}
     
+    //Dhruv
     @GetMapping("/addServiceForm")
     //@ResponseBody
     public String addServiceForm(Model model){
     	model.addAttribute("SearchService",new SearchService());
     	return "addServiceForm";
     }
-    
+    //Dhruv
     @PostMapping("/addServiceItem")
     @ResponseBody
     public String addServiceItem(SearchService SearchService) throws SQLException {
@@ -124,6 +130,7 @@ public class ServiceProvider_Controller {
     	return "Service Added Sucesfully!";
     }
 
+    //Achyutam
     @GetMapping("/ViewBooking")
     public String viewBooking(Model model) {
         List<ServiceProviderBookingDTO> bookings = serviceproviderservice.getBookedServices();
@@ -133,6 +140,7 @@ public class ServiceProvider_Controller {
 
 
 
+    //Achyutam
     @GetMapping("/PastBookings")
     public String viewPastBookings(Model model) {
         List<ServiceProviderBookingDTO> pastBookings = serviceproviderservice.getPastBookings();
@@ -140,6 +148,7 @@ public class ServiceProvider_Controller {
         return "PastBooking";
     }
 
+    //Dhruv
     @GetMapping("/ListServices")
     //@ResponseBody
     public String listServices(Model model){
@@ -148,12 +157,15 @@ public class ServiceProvider_Controller {
     	return "ListServices";
     }
     
+
+    //Dhruv
     @PostMapping("/DeleteService/{providerName}/{serviceId}")
     public RedirectView deleteService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String ServiceId, Model model) {
     	int res = serviceproviderservice.deleteSelectedService(providerName,ServiceId);
         	return new RedirectView("/ServiceProvider/ListServices");
     }
 
+    //Dhruv
     // Endpoint to modify a service
     @PostMapping("/ModifyService/{providerName}/{serviceId}")
     public String modifyService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String serviceId , Model model) {
@@ -165,17 +177,21 @@ public class ServiceProvider_Controller {
         return "ModifyService"; // Name of the Thymeleaf template for modification
     }
     
+
+    //Dhruv
     @PostMapping("/SaveModifiedService")
     public RedirectView saveModifiedService(@ModelAttribute SearchService searchService, Model model) {
     	serviceproviderservice.updateService(searchService);
         return new RedirectView("/ServiceProvider/ListServices");
     }
 
+    //Achyutam
     @PostMapping("/UpdateBookingStatus")
     public RedirectView updateBookingStatus(@RequestParam String bookingId, @RequestParam String status, RedirectAttributes redirectAttributes) {
         try {
             serviceproviderservice.updateBookingStatus(bookingId, status);
 
+            //Dhruv Design Pattern
             List<ServiceProvider> res = serviceproviderservice.getServiceProviderByServiceId();
             List<Customer> customers = customerService.getAllCustomersByCity(res.get(0).getCity());
 

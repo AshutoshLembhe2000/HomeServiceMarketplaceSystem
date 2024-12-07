@@ -1,7 +1,7 @@
 package com.example.demo.DAORepo;
 
-import com.example.demo.Model.OTPService.OTPServiceModel;
-import com.example.demo.Model.OTPService.OTPServiceMapper;
+import com.example.demo.Model.OTP.OTPServiceModel;
+import com.example.demo.Model.OTP.OTPServiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
