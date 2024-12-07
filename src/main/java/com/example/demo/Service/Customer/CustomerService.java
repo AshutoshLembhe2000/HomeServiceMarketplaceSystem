@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.DAORepo.CustomerRepository;
+import com.example.demo.Model.Booking.Booking;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 //import com.example.demo.Model.Customer.*;
 import com.example.demo.Model.Customer.Customer;
@@ -100,5 +101,13 @@ public class CustomerService {
 			return customerRepository.cancelCustomerCurrentBooking(bookingId);
 		}
 		return 0;
+	}
+	
+	public List<Booking> getAllPastBooking(String cusName) {
+		return customerRepository.findAllCustomerPastBooking(cusName);
+	}
+	
+	public int postRating(int service_id, String rating) {
+		return customerRepository.updateRating(service_id,rating);
 	}
 }

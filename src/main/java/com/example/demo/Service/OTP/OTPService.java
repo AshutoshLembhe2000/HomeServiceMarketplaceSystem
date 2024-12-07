@@ -1,7 +1,7 @@
 package com.example.demo.Service.OTP;
 
 import com.example.demo.DAORepo.OTPRepository;
-import com.example.demo.Model.OTPService.OTPServiceModel;
+import com.example.demo.Model.OTP.OTPServiceModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

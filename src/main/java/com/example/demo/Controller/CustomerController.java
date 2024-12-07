@@ -12,6 +12,8 @@ import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
+import com.example.demo.Service.WalletService.WalletService;
+import com.example.demo.Model.Booking.Booking;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.SearchServices.SearchService;
@@ -34,6 +36,9 @@ public class CustomerController {
     private final IUserFactory userFactory;
     @Autowired 
     private SearchServiceService searchServiceService;
+    
+    @Autowired
+    private WalletService walletService;
     
     @Autowired
     public CustomerController(CustomerService customerService,IUserFactory userFactory) {
@@ -93,8 +98,15 @@ public class CustomerController {
     	List<SearchService> services = searchServiceService.getAllServices();
 		Customer customer=customerService.getCustomerByName(this.getGlobalCustomername());
 		this.setGlobalCustomername(customer.getName());
+		
+		// Get Customer's balance
+		float walletBalance = walletService.getWalletBalanceByUserId(customer.getId(), "CUSTOMER");
+		
+		
 		model.addAttribute("customer",customer);
         model.addAttribute("services", services);
+        model.addAttribute("walletBalance", walletBalance); // Add balance to model
+        
         return "all-services";
     }
     
@@ -113,6 +125,24 @@ public class CustomerController {
         return "filter-services"; // Refers to the Thymeleaf view
     }
     /*---------------Search Service---------------------------*/
+    
+    /*---------------Rate Service---------------------------*/
+    @GetMapping("/rateService")
+    public String rateService(Model model)
+    {
+    	List<Booking> booking = customerService.getAllPastBooking(this.getGlobalCustomername());
+		model.addAttribute("Booking",booking);
+        return "CustomerPastServices";
+    }
+    
+    @PostMapping("/postRating")
+    @ResponseBody
+    public String postService(@RequestParam int service_id,@RequestParam String rating) {
+    	int response=customerService.postRating(service_id,rating);
+    	return "Rating posted";
+		
+    }
+    /*---------------Rate Service---------------------------*/
     
     @GetMapping("/book")
     //@ResponseBody
@@ -138,6 +168,8 @@ public class CustomerController {
     		return response;
     	}
     }
+    
+    
     
     @GetMapping("/CustomerCurrentBookedServices")
     public String getCustomerCurrentBooking(Model model) {

@@ -9,6 +9,11 @@
 <h3>Customer Information</h3> 
 <p>Name: <span th:text="${customer.name}"></span></p>
 <p>Customer City: <span th:text="${customer.city}"></span></p>
+
+<!-- Display Wallet Balance -->
+<h4>Wallet Balance</h4>
+<p>Balance: $<span th:text="${walletBalance}"></span></p>
+
 <form th:action="@{/Customer/filterservice}" method="get">
     <label>Search by Skill:</label>
     <input type="text" name="skill" placeholder="e.g., plumber" />

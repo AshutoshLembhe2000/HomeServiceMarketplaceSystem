@@ -22,6 +22,9 @@ public class ServiceProviderService {
         this.globalContext = globalContext;
     }
 
+    public List<ServiceProvider> getServiceProvider(String serviceId) {
+        return serviceprovider_repository.getServiceProvider(serviceId);
+    }
 
 
     public int VerifyifServiceProviderExist(ServiceProvider serviceprovider)
