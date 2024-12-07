@@ -1,4 +1,4 @@
-package com.example.demo.Model.OTPService;
+package com.example.demo.Model.OTP;
 
 import org.springframework.stereotype.Component;
 

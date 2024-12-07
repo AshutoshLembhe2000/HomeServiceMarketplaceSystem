@@ -111,6 +111,7 @@ public class PaymentController {
 
 
 
+    //Achyutam
     // Handles GET request to show OTP form
     @GetMapping("/VerifyOTP")
     public String showOTPForm(@RequestParam("bookingId") String bookingId, Model model) {
@@ -118,6 +119,7 @@ public class PaymentController {
         return "VerifyOTP"; // Thymeleaf template for OTP form
     }
 
+    //Achyutam
     @PostMapping("/VerifyOTP")
     public RedirectView verifyOTP(@RequestParam("bookingId") String bookingId,
                                   @RequestParam("otpCode") String otpCode,
