@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
-import java.sql.SQLException;
 
 @Controller
 @RequestMapping("/ServiceProvider")
-public class ServiceProvider_Controller {
+public class ServiceProviderController {
 
+	public static final String SEARCH_SERVICE = "SearchService";
+	public static final String SERVICE_PROVIDER = "ServiceProvider";
+	
     private final ServiceProviderService serviceproviderservice;
     
     @Autowired
@@ -39,12 +41,13 @@ public class ServiceProvider_Controller {
 	@Autowired
 	private WalletService walletService;  // Inject the WalletService to fetch wallet balance
 
-    public ServiceProvider_Controller(ServiceProviderService serviceproviderservice, IUserFactory userFactory,GlobalContext globalcontext, ServiceProviderStateManager serviceProviderStateManager, CustomerService customerService) {
+    public ServiceProviderController(ServiceProviderService serviceproviderservice, IUserFactory userFactory,GlobalContext globalcontext, ServiceProviderStateManager serviceProviderStateManager, CustomerService customerService,WalletService walletService) {
         this.serviceproviderservice = serviceproviderservice;
 		this.customerService = customerService;
         this.userFactory = userFactory;
         this.globalcontext=globalcontext;
         this.serviceProviderStateManager=serviceProviderStateManager;
+        this.walletService= walletService;
     }
 
     // Endpoint to register a new service provider
@@ -52,8 +55,8 @@ public class ServiceProvider_Controller {
     @GetMapping("/ServiceProviderRegistrationForm")
     public String checkServiceProvider(Model model)
     {
-        User ServiceProvider = userFactory.createUser("ServiceProvider");
-        model.addAttribute("ServiceProvider", ServiceProvider);
+        User serviceProvider = userFactory.createUser(SERVICE_PROVIDER);
+        model.addAttribute(SERVICE_PROVIDER, serviceProvider);
         return "ServiceProviderRegistration";
     }
 
@@ -61,7 +64,7 @@ public class ServiceProvider_Controller {
     //Achyutam
     @PostMapping("/ServiceProviderRegistrationSuccess")
     @ResponseBody
-    public RedirectView createServiceProvider(ServiceProvider serviceProvider) throws SQLException {
+    public RedirectView createServiceProvider(ServiceProvider serviceProvider) {
         int response = serviceproviderservice.VerifyifServiceProviderExist(serviceProvider);
         if (response == 0) {
             return new RedirectView("/ServiceProvider/ServiceProviderLoginForm?error=UserAlreadyExists");
@@ -74,10 +77,10 @@ public class ServiceProvider_Controller {
 
     //Achyutam
     @GetMapping("/ServiceProviderLoginForm")
-    public String LoginForm(Model model)
+    public String loginForm(Model model)
     {
         ServiceProvider serviceProvider = new ServiceProvider();
-        model.addAttribute("ServiceProvider", serviceProvider);
+        model.addAttribute(SERVICE_PROVIDER, serviceProvider);
         return "ServiceProvider_login";
     }
 
@@ -114,16 +117,16 @@ public class ServiceProvider_Controller {
     
     //Dhruv
     @GetMapping("/addServiceForm")
-    //@ResponseBody
     public String addServiceForm(Model model){
-    	model.addAttribute("SearchService",new SearchService());
+    	model.addAttribute(SEARCH_SERVICE,new SearchService());
     	return "addServiceForm";
     }
+    
     //Dhruv
     @PostMapping("/addServiceItem")
     @ResponseBody
-    public String addServiceItem(SearchService SearchService) throws SQLException {
-    	int s = serviceproviderservice.verifyServiceAddition(SearchService);
+    public String addServiceItem(SearchService searchService) {
+    	int s = serviceproviderservice.verifyServiceAddition(searchService);
         if (s == -1) {
             return "You can only add one service per ServiceProvider."; // Or redirect to an appropriate page with a message
         }
@@ -150,18 +153,17 @@ public class ServiceProvider_Controller {
 
     //Dhruv
     @GetMapping("/ListServices")
-    //@ResponseBody
     public String listServices(Model model){
     	System.out.println(globalcontext.getServiceProviderId());
-    	model.addAttribute("SearchService",serviceproviderservice.getAllServiceProviderServices());
+    	model.addAttribute(SEARCH_SERVICE,serviceproviderservice.getAllServiceProviderServices());
     	return "ListServices";
     }
     
 
     //Dhruv
     @PostMapping("/DeleteService/{providerName}/{serviceId}")
-    public RedirectView deleteService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String ServiceId, Model model) {
-    	int res = serviceproviderservice.deleteSelectedService(providerName,ServiceId);
+    public RedirectView deleteService(@PathVariable("providerName") String providerName,@PathVariable("serviceId") String serviceId, Model model) {
+    		serviceproviderservice.deleteSelectedService(providerName,serviceId);
         	return new RedirectView("/ServiceProvider/ListServices");
     }
 
@@ -172,7 +174,7 @@ public class ServiceProvider_Controller {
         // Fetch the service details and populate the modification form
         List<SearchService> res = serviceproviderservice.getServiceForModify(providerName,serviceId);
         //SearchService service = res.get(0);
-        model.addAttribute("SearchService", res.get(0));
+        model.addAttribute(SEARCH_SERVICE, res.get(0));
         System.out.println(res.get(0));
         return "ModifyService"; // Name of the Thymeleaf template for modification
     }
