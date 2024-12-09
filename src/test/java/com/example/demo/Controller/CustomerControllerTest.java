@@ -22,6 +22,7 @@ import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
+import com.example.demo.Service.WalletService.WalletService;
 
 class CustomerControllerTest {
 
@@ -30,6 +31,9 @@ class CustomerControllerTest {
 
     @Mock
     private CustomerService customerService;
+    
+    @Mock
+    private WalletService walletService;
 
     @Mock
     private Model model;
@@ -63,16 +67,22 @@ class CustomerControllerTest {
     }
 
     @Test
-    void testCreateCustomer() throws SQLException {
+    void testCreateCustomer() {
         // Arrange
-        Customer customer = new Customer();
-        when(customerService.addCustomer(customer)).thenReturn(1);
+    	Customer customer = new Customer();
+        customer.setId(1); // Assuming a default ID for the customer
+
+        // Mocking the service calls
+        when(customerService.addCustomer(customer)).thenReturn(customer);  // Assume the customer is created successfully
+        doNothing().when(walletService).createWallet(anyInt(), eq("CUSTOMER"), eq(100.0f)); // Mock createWallet to do nothing
 
         // Act
         String response = customerController.createCustomer(customer);
 
         // Assert
         assertEquals("User Created Successfully", response);
+        verify(customerService).addCustomer(customer);  // Verify that the service method was called
+        verify(walletService).createWallet(customer.getId(), "CUSTOMER", 100.0f);
     }
 
     @Test

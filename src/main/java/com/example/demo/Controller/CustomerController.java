@@ -20,7 +20,7 @@ import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.SearchServices.SearchService;
 
-@Controller
+@RestController
 @RequestMapping("/Customer")
 public class CustomerController {
 	
@@ -39,13 +39,13 @@ public class CustomerController {
     
     private SearchServiceService searchServiceService;
     
-    @Autowired
     private WalletService walletService;
     
-    public CustomerController(CustomerService customerService,IUserFactory userFactory,SearchServiceService searchServiceService) {
+    public CustomerController(CustomerService customerService,IUserFactory userFactory,SearchServiceService searchServiceService,WalletService walletService) {
         this.customerService = customerService;
         this.userFactory=userFactory;
         this.searchServiceService =searchServiceService;
+        this.walletService= walletService;
     }
     
     /*---------------Customer Registration---------------------------*/
