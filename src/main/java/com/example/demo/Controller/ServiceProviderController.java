@@ -6,6 +6,7 @@ import com.example.demo.Service.ServiceProvider.GlobalContext;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
 import com.example.demo.Model.ServiceProvider.ServiceProviderStateManager;
+import com.example.demo.Model.User.ConcreteUserFactory;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Customer.CustomerService;
@@ -34,7 +35,7 @@ public class ServiceProviderController {
     
     private final CustomerService customerService;
     
-    private final IUserFactory userFactory;
+    private IUserFactory userFactory;
     
 	private  final GlobalContext globalcontext; 
 	
@@ -55,8 +56,8 @@ public class ServiceProviderController {
     @GetMapping("/ServiceProviderRegistrationForm")
     public String checkServiceProvider(Model model)
     {
-        User serviceProvider = userFactory.createUser(SERVICE_PROVIDER);
-        model.addAttribute(SERVICE_PROVIDER, serviceProvider);
+    	userFactory=new ConcreteUserFactory();
+        model.addAttribute(SERVICE_PROVIDER, userFactory.createUser("ServiceProvider"));
         return "ServiceProviderRegistration";
     }
 
