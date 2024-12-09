@@ -10,6 +10,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
+import com.example.demo.Model.Wallet.Wallet;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
 import com.example.demo.Service.WalletService.WalletService;
@@ -50,22 +51,32 @@ public class CustomerController {
     @GetMapping("/customerRegistrationForm")
     public String checkUser(Model model){
     	User customer = userFactory.createUser("Customer");
+    	System.out.println(customer.getId());
     	model.addAttribute("customer",customer);
+    	
     	return "CustomerRegistration";
 	}
     
    
     @PostMapping("/customerRegistrationSuccess")
     @ResponseBody
-    public String createCustomer(Customer customer) throws SQLException {
-    	int response= customerService.addCustomer(customer);
-    	if(response==0) {
-    		return "User Already Exists go to login";
-    	}
-    	else
-    	{
-    		return "User Created Successfully";
-    	}
+    public String createCustomer(Customer customer) {
+        try {
+            Customer newCustomer = customerService.addCustomer(customer); // Get the customer with ID
+            // Create wallet for the new customer with an initial balance of 100
+            walletService.createWallet(newCustomer.getId(), "CUSTOMER", 100.0f);
+            System.out.println("HI NEW CUSTOMER: " + newCustomer); // Log the new customer
+            
+            return "User Created Successfully";
+        } 
+        catch (IllegalArgumentException e) {
+            return e.getMessage(); // User already exists
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            
+            return "An error occurred. Please try again.";
+        }
     }
     /*---------------Customer Registration---------------------------*/
     

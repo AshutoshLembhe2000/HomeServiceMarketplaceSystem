@@ -4,6 +4,8 @@ import com.example.demo.DAORepo.ServiceProvider_Repository;
 import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
+import com.example.demo.Service.WalletService.WalletService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class ServiceProviderService {
     private final ServiceProvider_Repository serviceprovider_repository;
     @Autowired
     private final GlobalContext globalContext;
+    
+    @Autowired
+    private WalletService walletService;
 
     public ServiceProviderService(ServiceProvider_Repository serviceprovider_repository, GlobalContext globalContext) {
         this.serviceprovider_repository = serviceprovider_repository;
@@ -29,15 +34,23 @@ public class ServiceProviderService {
 
     public int VerifyifServiceProviderExist(ServiceProvider serviceprovider)
     {
+    	int serviceProviderId = 0;
         List<Map<String, Object>> response=serviceprovider_repository.findServiceProvider(serviceprovider.getEmail());
         if(!response.isEmpty())
         {
             return 0;
         }
         else
-        {
-            return serviceprovider_repository.AddServiceProvider(serviceprovider);
+        {            
+            serviceProviderId = serviceprovider_repository.AddServiceProvider(serviceprovider);
+    	    
+            if (serviceProviderId > 0) {
+    	        // Create a wallet for the new service provider
+    	        walletService.createWallet(serviceProviderId, "SERVICE_PROVIDER", 0.0f);
+    	    }
+    	    
         }
+        return serviceProviderId;
     }
 
     //
@@ -96,5 +109,6 @@ public class ServiceProviderService {
 	public  List<ServiceProvider> getServiceProviderByServiceId() {
 		return serviceprovider_repository.getServiceProviderServices();
 	}
+	
 
 }

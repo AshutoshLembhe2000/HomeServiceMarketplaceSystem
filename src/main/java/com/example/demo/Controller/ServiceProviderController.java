@@ -66,9 +66,12 @@ public class ServiceProviderController {
     @ResponseBody
     public RedirectView createServiceProvider(ServiceProvider serviceProvider) {
         int response = serviceproviderservice.VerifyifServiceProviderExist(serviceProvider);
+        
         if (response == 0) {
             return new RedirectView("/ServiceProvider/ServiceProviderLoginForm?error=UserAlreadyExists");
-        } else {
+        } 
+        else {
+        	// Redirect to login form after successful registration
             return new RedirectView("/ServiceProvider/ServiceProviderLoginForm");
         }
     }

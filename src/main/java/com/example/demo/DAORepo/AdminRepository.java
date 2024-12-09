@@ -38,7 +38,7 @@ private JdbcTemplate queryTemplate;
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(admin.getPassword());
 		String query="INSERT INTO ADMIN (name,email,password) VALUES (?,?,?)";
-		return queryTemplate.update(query,admin.getName(),admin.getEmail(),hashedPassword);
+		return queryTemplate.update(query, admin.getName(),admin.getEmail(),hashedPassword);
 	}
 	
 	//Query to get all the customer's accounts

@@ -56,12 +56,26 @@ public class ServiceProvider_Repository {
 
     // Method to save service provider details
     public int AddServiceProvider(ServiceProvider serviceProvider) {
+        // Encrypt the password
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(serviceProvider.getPassword());
 
-        String query = "INSERT INTO ServiceProvider (name,email,password,phone,city) VALUES(?,?,?,?,?)";
-        return jdbctemplate.update(query, serviceProvider.getName(), serviceProvider.getEmail(), hashedPassword, serviceProvider.getPhoneno(), serviceProvider.getCity());
+        // Insert into ServiceProvider table
+        String query1 = "INSERT INTO ServiceProvider (name, email, password, phone, city) VALUES (?, ?, ?, ?, ?)";
+        jdbctemplate.update(query1, serviceProvider.getName(), serviceProvider.getEmail(), hashedPassword, serviceProvider.getPhoneno(), serviceProvider.getCity());
+
+        // Fetch the newly inserted ServiceProvider ID
+        String query2 = "SELECT LAST_INSERT_ID()";
+        int serviceProviderId = jdbctemplate.queryForObject(query2, Integer.class);
+
+//	        // Insert into Wallet table for the new ServiceProvider
+//	        String query3 = "INSERT INTO Wallet (user_id, user_type, balance) VALUES (?, ?, ?)";
+//	        jdbctemplate.update(query3, serviceProviderId, "SERVICE_PROVIDER", 0.0f);
+
+        // Return the new ServiceProvider ID
+        return serviceProviderId;
     }
+
 
     // Method to validate login
     public boolean ValidateLogin(String email, String password) {
