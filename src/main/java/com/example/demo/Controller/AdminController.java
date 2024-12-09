@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.Model.Admin.Admin;
 import com.example.demo.Model.Customer.Customer;
 import com.example.demo.Model.ServiceProvider.ServiceProvider;
+import com.example.demo.Model.User.ConcreteUserFactory;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
 import com.example.demo.Service.Admin.*;
@@ -25,7 +26,7 @@ import com.example.demo.Service.ServiceProvider.ServiceProviderService;
 @RequestMapping("/Admin")
 public class AdminController {
 	private final AdminService adminservice;
-    private final IUserFactory userFactory;
+    private IUserFactory userFactory;
     private final ServiceProviderService serviceProviderService;
     
     public AdminController(AdminService adminservice, IUserFactory userFactory, ServiceProviderService serviceProviderService) {
@@ -37,8 +38,8 @@ public class AdminController {
 
     @GetMapping("/adminRegistrationForm")
     public String checkUser(Model model){
-    	User admin = userFactory.createUser("Admin");
-    	model.addAttribute("admin",admin);
+    	userFactory=new ConcreteUserFactory();
+    	model.addAttribute("admin",userFactory.createUser("Admin"));
     	return "AdminRegistration";
 	}
     

@@ -23,12 +23,5 @@ public class AvailableStatusState implements IServiceProviderStatusState{
         return "AVAILABLE";
     }
     
-
-	@Override
-	public boolean canAcceptRejectBooking() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
+    
 }

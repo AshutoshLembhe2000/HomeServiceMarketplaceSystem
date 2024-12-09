@@ -29,16 +29,18 @@ public class CustomerService {
     }
     
     //Logic to check if User already exists or not.
-    public int addCustomer(Customer customer) {
-    	List<Map<String, Object>> response=customerRepository.findcustomer(customer.getName());
-    	if(!response.isEmpty()) {
-    		return 0;    		
-    	}
-    	else
-    	{
-    		return customerRepository.addcustomer(customer);
-    	}
-
+    public Customer addCustomer(Customer customer) {
+        List<Map<String, Object>> response = customerRepository.findcustomer(customer.getName());
+        
+        if (!response.isEmpty()) {
+            throw new IllegalArgumentException("User Already Exists");
+        } 
+        else {
+            int generatedId = customerRepository.addCustomer(customer);
+            customer.setId(generatedId); // Set the generated ID in the Customer object
+        
+            return customer;
+        }
     }
     
     //Login logic check

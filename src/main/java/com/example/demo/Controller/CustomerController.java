@@ -1,15 +1,16 @@
 package com.example.demo.Controller;
-import java.sql.SQLException;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.example.demo.Model.User.ConcreteUserFactory;
 import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Model.User.User;
+import com.example.demo.Model.Wallet.Wallet;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.SearchService.SearchServiceService;
 import com.example.demo.Service.WalletService.WalletService;
@@ -22,8 +23,8 @@ import com.example.demo.Model.SearchServices.SearchService;
 @RequestMapping("/Customer")
 public class CustomerController {
 	
-	public String globalCustomername;
-	
+	public static String globalCustomername;
+	public static final String customerString="customer";
 	public String getGlobalCustomername() {
 		return globalCustomername;
 	}
@@ -33,39 +34,48 @@ public class CustomerController {
 	}
 	
     private final CustomerService customerService;
-    private final IUserFactory userFactory;
-    @Autowired 
+    private IUserFactory userFactory;
+    
     private SearchServiceService searchServiceService;
     
     @Autowired
     private WalletService walletService;
     
-    @Autowired
-    public CustomerController(CustomerService customerService,IUserFactory userFactory) {
+    public CustomerController(CustomerService customerService,IUserFactory userFactory,SearchServiceService searchServiceService) {
         this.customerService = customerService;
         this.userFactory=userFactory;
+        this.searchServiceService =searchServiceService;
     }
     
     /*---------------Customer Registration---------------------------*/
     @GetMapping("/customerRegistrationForm")
     public String checkUser(Model model){
-    	User customer = userFactory.createUser("Customer");
-    	model.addAttribute("customer",customer);
+    	userFactory=new ConcreteUserFactory();
+    	
+    	model.addAttribute(customerString,userFactory.createUser("Customer"));
     	return "CustomerRegistration";
 	}
     
    
     @PostMapping("/customerRegistrationSuccess")
     @ResponseBody
-    public String createCustomer(Customer customer) throws SQLException {
-    	int response= customerService.addCustomer(customer);
-    	if(response==0) {
-    		return "User Already Exists go to login";
-    	}
-    	else
-    	{
-    		return "User Created Successfully";
-    	}
+    public String createCustomer(Customer customer) {
+        try {
+            Customer newCustomer = customerService.addCustomer(customer); // Get the customer with ID
+            // Create wallet for the new customer with an initial balance of 100
+            walletService.createWallet(newCustomer.getId(), "CUSTOMER", 100.0f);
+            System.out.println("HI NEW CUSTOMER: " + newCustomer); // Log the new customer
+            
+            return "User Created Successfully";
+        } 
+        catch (IllegalArgumentException e) {
+            return e.getMessage(); // User already exists
+        } 
+        catch (Exception e) {
+            e.printStackTrace();
+            
+            return "An error occurred. Please try again.";
+        }
     }
     /*---------------Customer Registration---------------------------*/
     
@@ -76,17 +86,15 @@ public class CustomerController {
     }
     
     @PostMapping("/customerLoginSuccess")
-    //@ResponseBody
     public String authenticateCustomer(@RequestParam("username") String name, @RequestParam String password,Model model) {
     	int response=customerService.checkCustomerLogin(name,password);
     	if(response==1) {
     		this.setGlobalCustomername(name);
             return "CustomerWelcomeScreen";
     	}
-    	else {
-    		//model.addAttribute("error", "Customer does not exist, please create a new user and login again."); 
+    	else { 
     		User customer = userFactory.createUser("Customer");
-        	model.addAttribute("customer",customer);
+        	model.addAttribute(customerString,customer);
         	return "CustomerRegistration";
     	}
     }
@@ -102,8 +110,7 @@ public class CustomerController {
 		// Get Customer's balance
 		float walletBalance = walletService.getWalletBalanceByUserId(customer.getId(), "CUSTOMER");
 		
-		
-		model.addAttribute("customer",customer);
+		model.addAttribute(customerString,customer);
         model.addAttribute("services", services);
         model.addAttribute("walletBalance", walletBalance); // Add balance to model
         
@@ -120,7 +127,7 @@ public class CustomerController {
         // Fetch the filtered services for the customer
         List<SearchService> services = customerService.searchService(skill, city, status);
         Customer customer=customerService.getCustomerByName(this.getGlobalCustomername());
-		model.addAttribute("customer",customer);
+		model.addAttribute(customerString,customer);
         model.addAttribute("services", services);
         return "filter-services"; // Refers to the Thymeleaf view
     }
@@ -136,16 +143,14 @@ public class CustomerController {
     }
     
     @PostMapping("/postRating")
-    @ResponseBody
-    public String postService(@RequestParam int service_id,@RequestParam String rating) {
-    	int response=customerService.postRating(service_id,rating);
+    public String postService(@RequestParam int serviceid,@RequestParam String rating) {
+    	customerService.postRating(serviceid,rating);
     	return "Rating posted";
 		
     }
     /*---------------Rate Service---------------------------*/
     
     @GetMapping("/book")
-    //@ResponseBody
     public String bookservice(@RequestParam String serviceId, @RequestParam String customerCity, @RequestParam String serviceCity,
     		@RequestParam String serviceStatus,@RequestParam String servicePrice, @RequestParam String serviceSkill, 
     		@RequestParam String serviceRating, @RequestParam String serviceProviderName, @RequestParam String serviceCategory,Model model) {
@@ -179,7 +184,6 @@ public class CustomerController {
     }
     
     @PostMapping("/CancelBooking/{bookingId}/{bookingStatus}")
-    @ResponseBody
     public RedirectView deleteService(@PathVariable("bookingId") String bookingId,@PathVariable("bookingStatus") String bookingStatus,RedirectAttributes redirectAttributes) {
     	int res = customerService.cancelSelectedBooking(bookingId,bookingStatus);
     	if(res!=0) {
