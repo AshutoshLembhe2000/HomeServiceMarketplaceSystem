@@ -120,7 +120,7 @@ public class PaymentController {
     }
 
     //Achyutam
-    @PostMapping("/VerifyOTP")
+    @PostMapping("/VerifyOTPService")
     public RedirectView verifyOTP(@RequestParam("bookingId") String bookingId,
                                   @RequestParam("otpCode") String otpCode,
                                   RedirectAttributes redirectAttributes) {
