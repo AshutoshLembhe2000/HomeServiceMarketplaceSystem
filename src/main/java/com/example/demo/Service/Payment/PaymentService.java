@@ -61,9 +61,9 @@ public class PaymentService
         System.out.println(finalamount);
         
         // Wallet Logic: Fetch customer and service provider wallet balances
-        float customerBalance = walletRepository.getWalletBalanceByUserId(customer.getId());
+        float customerBalance = walletRepository.getWalletBalanceByUserId(customer.getId(), "CUSTOMER");
         int serviceProviderId = paymentRepository.getServiceProviderIdByServiceId(serviceId); // Assuming this method exists
-        float serviceProviderBalance = walletRepository.getWalletBalanceByUserId(serviceProviderId);
+        float serviceProviderBalance = walletRepository.getWalletBalanceByUserId(serviceProviderId, "SERVICE_PROVIDER");
 
 
         // Check if customer has sufficient balance
