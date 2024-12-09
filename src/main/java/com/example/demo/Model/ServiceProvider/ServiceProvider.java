@@ -36,9 +36,7 @@ public class ServiceProvider extends User implements IServiceProviderSubject, IS
 	        state.handleStatusState(this, serviceProviderRepository);
 	    }
 
-	    public boolean canAcceptBooking() {
-	        return state.canAcceptRejectBooking();
-	    }
+
 
 	    public String getStateName() {
 	        return state.getStateName();

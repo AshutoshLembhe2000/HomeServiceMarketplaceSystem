@@ -19,26 +19,14 @@ public class BusyStatusState implements IServiceProviderStatusState {
             repository.updateServicsStatus(provider); // Use the repository only if available
         }
     }
-    /*
-    @Override
-    public void updateServicesStatus(ServiceProvider provider) {
-        //List<ServiceProvider> services = searchServiceRepository.findByProviderId(provider.getProviderId());
-       // services.forEach(service -> service.setState(new BusyStatusState()));
-    	provider.setState(new BusyStatusState());
-    	serviceprovider_repository.updateServicsStatus(provider);
-    }
-*/
+  
+    
     
     @Override
     public String getStateName() {
         return "BUSY";
     }	
 
-
-	@Override
-	public boolean canAcceptRejectBooking() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    
 
 }
