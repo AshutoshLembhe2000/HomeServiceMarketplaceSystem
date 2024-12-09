@@ -1,6 +1,8 @@
 package com.example.demo.DAORepo;
 
 import java.sql.ResultSet;
+import org.springframework.jdbc.support.KeyHolder;
+
 import java.util.List;
 import java.util.Map;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +16,7 @@ import com.example.demo.Model.Booking.ServiceProviderBookingDTO;
 import com.example.demo.Model.Customer.*;
 import com.example.demo.Model.SearchServices.SearchService;
 import com.example.demo.Model.SearchServices.SearchServiceRowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 @Repository
 public class CustomerRepository {
@@ -38,13 +41,27 @@ public class CustomerRepository {
     }
 	
 	//Query to new customer to the database
-	public int addcustomer(Customer customer) {
-		BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-		String hashedPassword = passwordEncoder.encode(customer.getPassword());
+	public int addCustomer(Customer customer) {
+	    // Encrypt the password
+	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    String hashedPassword = passwordEncoder.encode(customer.getPassword());
 
-		String query = "INSERT INTO CUSTOMER (name,email,password,phone_number,city) VALUES (?,?,?,?,?)";
-		return queryTemplate.update(query, customer.getName(), customer.getEmail(), hashedPassword, customer.getPhoneno(), customer.getCity());
+	    // Insert query
+	    String query = "INSERT INTO CUSTOMER (name, email, password, phone_number, city) VALUES (?, ?, ?, ?, ?)";
+
+	    // Execute query and retrieve the generated ID
+	    queryTemplate.update(query, 
+	        customer.getName(), 
+	        customer.getEmail(), 
+	        hashedPassword, 
+	        customer.getPhoneno(), 
+	        customer.getCity());
+
+	    // Assuming the ID is auto-generated, we can use a SELECT query to retrieve it
+	    String idQuery = "SELECT LAST_INSERT_ID()";
+	    return queryTemplate.queryForObject(idQuery, Integer.class);  // Returns the last generated ID
 	}
+
 	
 	//Query to check for login with and password
 	public List<Map<String, Object>> loginCustomer(String name, String password){

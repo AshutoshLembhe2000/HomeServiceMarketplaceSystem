@@ -10,6 +10,7 @@ public abstract class PaymentDecorator extends BasePayment {
 
     @Override
     public float processPayment() {
+        notifyObservers();
         return decoratedPayment.processPayment();
     }
 }

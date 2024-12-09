@@ -1,4 +1,4 @@
-package com.example.demo.Model.OTPService;
+package com.example.demo.Model.OTP;
 
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;

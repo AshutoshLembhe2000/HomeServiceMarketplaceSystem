@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +25,29 @@ import com.example.demo.Model.User.IUserFactory;
 import com.example.demo.Service.Customer.CustomerService;
 import com.example.demo.Service.ServiceProvider.GlobalContext;
 import com.example.demo.Service.ServiceProvider.ServiceProviderService;
+import com.example.demo.Service.WalletService.WalletService;
+
 
 class ServiceProvider_ControllerTest {
 
 	@InjectMocks
-	private ServiceProvider_Controller serviceProvider_Controller;
+	private ServiceProviderController serviceProviderController;
+	
 	@Mock
 	private ServiceProviderService serviceproviderservice;
+	
 	@Mock
 	private IUserFactory userFactory;
+	
 	@Mock
 	private GlobalContext globalcontext;
+	
+	@Mock
+	private WalletService walletService;
+	
 	@Mock
 	private ServiceProviderStateManager serviceProviderStateManager;
+	
 	@Mock
 	private CustomerService customerService;
 
@@ -55,7 +64,7 @@ class ServiceProvider_ControllerTest {
 
 	@Test
 	void testLoginForm() {
-		String viewName = serviceProvider_Controller.LoginForm(model);
+		String viewName = serviceProviderController.loginForm(model);
 		assertEquals("ServiceProvider_login", viewName);
 	}
 
@@ -66,14 +75,14 @@ class ServiceProvider_ControllerTest {
 		String wrongPassword = "12341";
 		RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 		when(serviceproviderservice.validateLogin(email, correctPassword)).thenReturn(true);
-		RedirectView result = serviceProvider_Controller.loginServiceProvider(email, correctPassword,
+		RedirectView result = serviceProviderController.loginServiceProvider(email, correctPassword,
 				redirectAttributes);
 
 		assertThat(result).isNotNull();
 		assertThat(result.getUrl()).isEqualTo("ServiceProviderWelcomeScreen");
 
 		when(serviceproviderservice.validateLogin(email, wrongPassword)).thenReturn(false);
-		RedirectView result2 = serviceProvider_Controller.loginServiceProvider(email, wrongPassword,
+		RedirectView result2 = serviceProviderController.loginServiceProvider(email, wrongPassword,
 				redirectAttributes);
 
 		assertThat(result2).isNotNull();
@@ -82,24 +91,30 @@ class ServiceProvider_ControllerTest {
 
 	@Test
 	void testServiceProviderForm() {
-		String view = serviceProvider_Controller.serviceProviderForm(model);
+		
+		when(globalcontext.getServiceProviderId()).thenReturn("1");
+		when(walletService.getWalletBalanceByUserId(1, "SERVICE_PROVIDER")).thenReturn((float) 100);
+		
+		String view = serviceProviderController.serviceProviderForm(model);
+		
 		assertEquals("ServiceProviderWelcomeScreen", view);
 	}
 	
 	@Test
 	void testAddServiceForm() {
-		String view = serviceProvider_Controller.addServiceForm(model);
+		String view = serviceProviderController.addServiceForm(model);
+		
 		assertEquals("addServiceForm", view);
 	}
 	
 	@Test
-	void testAddServiceItem() throws SQLException {
+	void testAddServiceItem() {
 		SearchService searchService =new SearchService();
 		when(serviceproviderservice.verifyServiceAddition(searchService)).thenReturn(-1);
-		String result = serviceProvider_Controller.addServiceItem(searchService);
+		String result = serviceProviderController.addServiceItem(searchService);
 		
 		when(serviceproviderservice.verifyServiceAddition(searchService)).thenReturn(1);
-		String result2 = serviceProvider_Controller.addServiceItem(searchService);
+		String result2 = serviceProviderController.addServiceItem(searchService);
 		
 		assertEquals("You can only add one service per ServiceProvider.", result);
 		assertEquals("Service Added Sucesfully!", result2);
@@ -107,13 +122,14 @@ class ServiceProvider_ControllerTest {
 
 	@Test
 	void testViewBooking() {
-		ServiceProviderBookingDTO ServiceProviderBookingDTO = new ServiceProviderBookingDTO();
-		 ServiceProviderBookingDTO.setCustomerName("Test");
+		 ServiceProviderBookingDTO serviceProviderBookingDTO = new ServiceProviderBookingDTO();
+		 serviceProviderBookingDTO.setCustomerName("Test");
 		 List<ServiceProviderBookingDTO> bookings = new ArrayList<>();
-		 bookings.add(ServiceProviderBookingDTO);
+		 bookings.add(serviceProviderBookingDTO);
 		 
 		 when(serviceproviderservice.getBookedServices()).thenReturn(bookings);
-		 String view =  serviceProvider_Controller.viewBooking(model);
+		 String view =  serviceProviderController.viewBooking(model);
+		 
 		 assertEquals("ServiceProviderBookedServices", view);
 		 
 	}
@@ -126,7 +142,8 @@ class ServiceProvider_ControllerTest {
 		pastBookings.add(serviceProviderBookingDTO);
 
 		when(serviceproviderservice.getPastBookings()).thenReturn(pastBookings);
-		String view =  serviceProvider_Controller.viewPastBookings(model);
+		String view =  serviceProviderController.viewPastBookings(model);
+		
 		assertEquals("PastBooking", view);
 
 	}
@@ -135,7 +152,8 @@ class ServiceProvider_ControllerTest {
 	void testListServices()
 	{
 		when(globalcontext.getServiceProviderId()).thenReturn(String.valueOf(1));
-		String view = serviceProvider_Controller.listServices(model);
+		String view = serviceProviderController.listServices(model);
+		
 		assertEquals("ListServices", view);
 
 	}
@@ -144,7 +162,7 @@ class ServiceProvider_ControllerTest {
 	void testdeleteService()
 	{
 		when(serviceproviderservice.deleteSelectedService("John", "1")).thenReturn(1);
-		RedirectView view = serviceProvider_Controller.deleteService("John", "1", model);
+		RedirectView view = serviceProviderController.deleteService("John", "1", model);
 		//assertThat(view).isNotNull();
 		assertThat(view.getUrl()).isEqualTo("/ServiceProvider/ListServices");
 
@@ -160,7 +178,8 @@ class ServiceProvider_ControllerTest {
 		searchServicesList.add(searchService);
 
 		when(serviceproviderservice.getServiceForModify("name", "1")).thenReturn(searchServicesList);
-		String view = serviceProvider_Controller.modifyService("name", "1", model);
+		String view = serviceProviderController.modifyService("name", "1", model);
+		
 		assertEquals("ModifyService", view);
 
 	}
@@ -170,7 +189,8 @@ class ServiceProvider_ControllerTest {
 	{
 		SearchService searchService = new SearchService();
 		when(serviceproviderservice.updateService(searchService)).thenReturn(1);
-		RedirectView view = serviceProvider_Controller.saveModifiedService(searchService, model);
+		RedirectView view = serviceProviderController.saveModifiedService(searchService, model);
+		
 		assertThat(view.getUrl()).isEqualTo("/ServiceProvider/ListServices");
 	}
 
@@ -186,9 +206,10 @@ class ServiceProvider_ControllerTest {
 		doNothing().when(serviceproviderservice).updateBookingStatus("1", "Pending");
 		doNothing().when(serviceProviderStateManager).changeState(serviceProvider,"Booking", customerList);
 
-		RedirectView view = serviceProvider_Controller.updateBookingStatus("1", "Pending",redirectAttributes);
+		RedirectView view = serviceProviderController.updateBookingStatus("1", "Pending",redirectAttributes);
 		assertThat(view.getUrl()).isEqualTo("/ServiceProvider/ViewBooking");
 
 
 	}
+	
 }

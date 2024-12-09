@@ -61,9 +61,9 @@ public class PaymentService
         System.out.println(finalamount);
         
         // Wallet Logic: Fetch customer and service provider wallet balances
-        float customerBalance = walletRepository.getWalletBalanceByUserId(customer.getId());
+        float customerBalance = walletRepository.getWalletBalanceByUserId(customer.getId(), "CUSTOMER");
         int serviceProviderId = paymentRepository.getServiceProviderIdByServiceId(serviceId); // Assuming this method exists
-        float serviceProviderBalance = walletRepository.getWalletBalanceByUserId(serviceProviderId);
+        float serviceProviderBalance = walletRepository.getWalletBalanceByUserId(serviceProviderId, "SERVICE_PROVIDER");
 
 
         // Check if customer has sufficient balance
@@ -72,8 +72,8 @@ public class PaymentService
         }
         
         // Deduct from customer wallet and add to service provider wallet
-        walletRepository.updateWalletBalance(customer.getId(), customerBalance - finalamount);
-        walletRepository.updateWalletBalance(serviceProviderId, serviceProviderBalance + finalamount);
+        walletRepository.updateWalletBalance(customer.getId(), "CUSTOMER", customerBalance - finalamount);
+        walletRepository.updateWalletBalance(serviceProviderId, "SERVICE_PROVIDER" ,serviceProviderBalance + finalamount);
 
         
         // Generate a timestamp for the payment
@@ -93,19 +93,17 @@ public class PaymentService
 
         // Update booking payment status
         paymentRepository.updateBookingPaymentStatus(bookingId);
-
-
-
         
         //Letting customer know if they have got any discount or not
         if (getcount > 4) {
-            finalmessage="Final amount after 10% loyalty discount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: "+ otpCode;
+            finalmessage="Final amount after 10% loyalty discount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: " + otpCode;
         } else if (getcount >=2 && 4<=getcount) {
-        	finalmessage="Final amount after 5% discount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: "+ otpCode;
+        	finalmessage="Final amount after 5% discount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: " + otpCode;
         }
         else
         {
-        	finalmessage="Final amount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: "+ otpCode;
+        	// + otpCode
+        	finalmessage="Final amount: " + finalamount + " Booking ID: " + bookingId + " OTP Code: " + otpCode;
         }
         return finalmessage;
     }

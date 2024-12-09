@@ -11,6 +11,10 @@ public class Wallet {
 
     @Column(nullable = false, unique = true)
     private int userId;
+    
+    @Column(nullable = false)
+    private String userType; // NEW: To distinguish CUSTOMER or SERVICE_PROVIDER
+
 
     @Column(nullable = false)
     private float balance;
@@ -30,6 +34,14 @@ public class Wallet {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+    
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public float getBalance() {
